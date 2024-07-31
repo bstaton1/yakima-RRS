@@ -53,3 +53,21 @@ rsconnect/
 
 # the data file
 YakimaParentageInputFile2024*
+
+### OUTPUT FILES
+### DON'T TRACK, SINCE CAN BE REPRODUCED FROM SOURCE CODE
+
+# any output figure files
+*.png
+*.pdf
+
+# any Rmarkdown output files
+*.docx
+*.html
+
+# any output AIC tables
+AIC_table.csv
+
+# any saved R objects
+*.rds
+
