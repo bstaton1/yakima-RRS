@@ -1,0 +1,102 @@
+
+#### `r stringr::str_to_title(the_var)` {.tabset}
+
+```{r}
+# description text
+description_text = list(
+  "length" = "**Relationships between RS (by type) and fork length (mm)**, separated by categorical variables of interest (e.g., origin, sex, year, etc.). Curves show the model-fitted relationship, shaded regions show 95% bootstrap confidence intervals, and points show _binned averages_ of of the raw data (bin width = 10mm). Filled-in points have $\\ge$ 10 spawners per bin, hollow points have $\\lt$ 10 spawners per bin.",
+  "day" = "**Relationships between RS (by type) and return date**, separated by categorical variables of interest (e.g., origin, sex, year, etc.). Curves show the model-fitted relationship, shaded regions show 95% bootstrap confidence intervals, and points show _binned averages_ of of the raw data (bin width = 5 days). Filled-in points have $\\ge$ 10 spawners per bin, hollow points have $\\lt$ 10 spawners per bin.",
+  "F1" = "**Relationships between RS (by type) and the number of progeny**, separated by categorical variables of interest (e.g., origin, sex, year, etc.). Curves show the model-fitted relationship, shaded regions show 95% bootstrap confidence intervals, and points show _binned averages_ of of the raw data (bin width = 1 spawner). Filled-in points have $\\ge$ 10 spawners per bin, hollow points have $\\lt$ 10 spawners per bin."
+)
+```
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_`r description_text[[the_var]]`_
+</details>
+:::
+
+```{r}
+# decide what to use for adult life stages.
+# If not in model, leave NULL
+if (has_life_stage) life_stage_use = "Adult" else life_stage_use = NULL
+
+# function to build a file path depending on the predictor variable (p), RS type (rs), sex (s), and life stage (l; if applicable)
+make_relationship_file_name = function(p, rs, s, l = NULL) {
+  
+  # the directory containing the continuous figures for this analysis
+  fig_dir = file.path(out_dir, "RS-v-continuous-figs")
+  
+  # the base file name with capitalized placeholders
+  base_file = file.path(fig_dir, "RS-v-PREDVAR_RSTYPE_LIFESTAGE_SEX.png")
+  
+  # replace the placeholders with arguments
+  # if life stage not provided, replace it with nothing
+  base_file |> 
+    stringr::str_replace("PREDVAR", p) |> 
+    stringr::str_replace("RSTYPE", rs) |> 
+    stringr::str_replace("SEX", s) |> 
+    stringr::str_replace("_LIFESTAGE", ifelse(is.null(l), "", paste0("_", l)))
+}
+```
+
+##### `r RS_name("cond", grand = is_grand)` {.tabset .tabset-pills}
+
+`r if (has_life_stage) "###### Jack"`
+
+```{r, eval = has_life_stage}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "cond", s = "M", l = "Jack"))
+```
+
+###### Male
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "cond", s = "M", l = life_stage_use))
+```
+
+###### Female
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "cond", s = "F", l = life_stage_use))
+```
+
+##### `r RS_name("nzprb", grand = is_grand)` {.tabset .tabset-pills}
+
+`r if (has_life_stage) "###### Jack"`
+
+```{r, eval = has_life_stage}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "nzprb", s = "M", l = "Jack"))
+```
+
+###### Male
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "nzprb", s = "M", l = life_stage_use))
+```
+
+###### Female
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "nzprb", s = "F", l = life_stage_use))
+```
+
+##### `r RS_name("resp", grand = is_grand)` {.tabset .tabset-pills}
+
+`r if (has_life_stage) "###### Jack"`
+
+```{r, eval = has_life_stage}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "resp", s = "M", l = "Jack"))
+```
+
+###### Male
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "resp", s = "M", l = life_stage_use))
+```
+
+###### Female
+
+```{r}
+knitr::include_graphics(make_relationship_file_name(p = the_var, rs = "resp", s = "F", l = life_stage_use))
+```

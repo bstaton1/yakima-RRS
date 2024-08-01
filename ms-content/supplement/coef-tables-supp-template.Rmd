@@ -1,0 +1,24 @@
+#### Model Coefficients {.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_These tables display the estimated coefficients of the GLM submodels._
+
+_For the **conditional submodel**, the intercept represents $\log(\mu)$ at zero/baseline values of all predictors, where $\mu$ is the mean parameter of a zero-truncated negative binomial distribution; other coefficients represent the additive effect of changes in the covariates on $\log(\mu)$ (i.e., multiplicative effects on $\mu$)._
+
+_For the **zero submodel**, the intercept represents $\log(\pi/(1-\pi))$ (logit transformation, a.k.a. log-odds) at zero/baseline values of all predictors, where $\pi$ represents the probability the response is zero; other coefficients represent the additive effect of changes in the covariates on $\log(\pi/(1-\pi))$ (i.e., multiplicative effects on odds of a zero)._
+</details>
+:::
+
+##### Conditional Submodel
+
+```{r}
+coef_kable(best_model, type = "cond")
+```
+
+`r if (has_zi) "##### Zero Submodel"`
+
+```{r, eval = has_zi}
+coef_kable(best_model, type = "zi")
+```

@@ -1,0 +1,1108 @@
+---
+title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</big></b></span>'
+subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
+author: |
+    | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
+    | <small>**Date Drafted**: 2024-07-26</small>
+output:
+  html_document
+params:
+  output_subdir: 
+    value: "output"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center", out.width = "75%")
+
+# have knitr use "--" anywhere there is an NA in a kable
+options(knitr.kable.NA = "--")
+
+# force knitr to use the exact path provided to include_graphics()
+options(knitr.graphics.rel_path = FALSE)
+
+# ensure everything is executed from the project directory
+proj_dir = rprojroot::find_rstudio_root_file()
+supp_dir = file.path(proj_dir, "ms-content/supplement")
+knitr::opts_knit$set(root.dir = proj_dir)
+
+# assign the directory where the scripts will look for them
+the_args = list(); the_args$subdir = params$output_subdir
+
+# these objects will not be removed by calling the subsequent scripts
+protect = c("protect", "fig_id", "tab_id", "the_fig", "the_tab", "proj_dir", "supp_dir", "the_args")
+
+# initiate the id counters for figure and table IDs
+fig_id <<- 0; tab_id <<- 0
+
+# create functions to print/increment these counters
+# inc = TRUE will increment the counter +1 before printing
+the_fig = function(inc = TRUE) {fig_id <<- fig_id + ifelse(inc, 1, 0); fig_id}
+the_tab = function(inc = TRUE) {tab_id <<- tab_id + ifelse(inc, 1, 0); tab_id}
+
+# specify table footnotes that are used more than once
+no_broodstock_footnote = "Removed because research question focuses only fish spawning naturally, not in the hatchery."
+no_F1_broodstock_footnote = "Removed because spawners (F~0~) with progeny (F~1~) used as broodstock will have biased grand-progeny (F~2~) counts, due to improved juvenile survival of HOR fish relative to NOR fish. Thus, lineages involving only natural spawning were included."
+no_HOR_demo_boost_footnote_text = "The research question was focused on comparing productivity of fish spawned in the hatchery vs. in the wild. To remove potential confounding effects of recent ancestry, we used only NOR fish for this analysis; further, only NOR fish are used as broodstock."
+
+# add these to the list of protected objects
+protect = c(protect, "no_broodstock_footnote", "no_F1_broodstock_footnote", "no_HOR_demo_boost_footnote_text")
+```
+
+```{css}
+h2 {
+  color: black;
+  background-color: lightgrey;
+  font-size: 2.75em;
+  font-variant: small-caps;
+  font-weight: 700;
+  text-decoration: underline;
+  border-radius: 5px;
+  border-color: darkslategrey;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.helptext {
+  color: darkslategray;
+  background-color: #F0F0F0;
+  font-size: 0.9em;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-radius: 5px;
+}
+
+```
+
+## Origin Type RRS<small> 1-Gen </small> {.tabset}
+
+```{r 01-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("01-1gen-RRS/01-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 01-desc-table}
+desc_table(
+  y_var = "Progeny/spawner",
+  main_x_var = "Origin",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "HOR:NOR",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners taken as broodstock")
+    )
+  ),
+  footnote_text = c(no_broodstock_footnote)
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small>
+
+```{r 01-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Jack
+
+```{r 01-jack-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (b) Male
+
+```{r 01-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
+
+```{r 01-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = TRUE`
+
+```{r 01-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 01-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, origin, sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S2._
+</details>
+:::
+
+```{r 01-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 01-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 01-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Origin Type RRS<small> 2-Gen </small> {.tabset}
+
+```{r 02a-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("02a-2gen-RRS/02a-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 02a-desc-table}
+desc_table(
+  y_var = "Grand-progeny/spawner",
+  main_x_var = "Origin",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "HOR:NOR",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners taken as broodstock"),
+      htmltools::tags$li("^b^Spawners with progeny taken as broodstock")
+    )
+  ),
+  footnote_text = c(no_broodstock_footnote, no_F1_broodstock_footnote)
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small> 
+
+```{r 02a-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Jack
+
+```{r 02a-jack-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (b) Male
+
+```{r 02a-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
+
+```{r 02a-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = TRUE`
+
+```{r 02a-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 02a-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, origin, sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S4._
+</details>
+:::
+
+```{r 02a-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 02a-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 02a-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Origin Type RRS<small> 2-Gen w/F~1~ Covariate</small> {.tabset}
+
+```{r 02b-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("02b-2gen-RRS-wF1/02b-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 02b-desc-table}
+desc_table(
+  y_var = "Grand-progeny/spawner",
+  main_x_var = "Origin",
+  other_x_vars = "Year, sex, length, day, life stage, F~1~ progeny",
+  RRS = "HOR:NOR",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners taken as broodstock"),
+      htmltools::tags$li("^b^Spawners with progeny taken as broodstock"),
+      htmltools::tags$li("^c^Spawners with zero F~1~ progeny")
+    )
+  ),
+  footnote_text = c(
+    no_broodstock_footnote, no_F1_broodstock_footnote,
+    "Spawners (F~0~) that produce zero progeny (F~1~) are guaranteed to produce zero grand-progeny (F~2~). If included in the hurdle model, this lack of variability at one covariate value is problematic for the zero submodel and predictions from the conditional sub-model at F~1~ = 0 will always be wrong. Thus we deemed inclusion of the F~1~ covariate required using only spawners that produced at least one F~1~ progeny; the 1-Gen Origin Type RRS analysis already established the factors driving the probability of producing zero F~1~ progeny.")
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small> 
+
+```{r 02b-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Jack
+
+```{r 02b-jack-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (b) Male
+
+```{r 02b-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
+
+```{r 02b-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
+  denominator = c("keep_origin" = "NOR"),
+  numerator = c("keep_origin" = "HOR"),
+  dcast_formula = year ~ variable + origin,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "F1"; has_life_stage = TRUE`
+
+```{r 02b-rs-v-cont-F1, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, origin, sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S6._
+</details>
+:::
+
+```{r 02b-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Fig. S`r the_fig()` <small>_RRS_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Relative reproductive success (RRS) ratios from hurdle model-predicted reproductive success values of reproductive success by year, origin, sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S6._
+</details>
+:::
+
+```{r 02b-rrs, out.width = "40%"}
+knitr::include_graphics(file.path(out_dir, "RRS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 02b-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 02b-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Cross Type RRS<small> 1-Gen </small> {.tabset}
+
+```{r 03-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("03-cross-type-RRS/03-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 03-desc-table}
+desc_table(
+  y_var = "Progeny/spawning pair",
+  main_x_var = "Cross type (origin of female x origin of male)",
+  other_x_vars = "Year, length (of both parents), day of both parents, life stage (of male)",
+  RRS = "HORxHOR:NORxNOR; HORxNOR:NORxNOR; NORxHOR:NORxNOR",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners taken as broodstock"),
+      htmltools::tags$li("^b^Spawners with zero progeny")
+    )
+  ),
+  footnote_text = c(
+    no_broodstock_footnote,
+    "Spawners with zero progeny were members of spawning pairs that produced zero progeny -- by definition we do not know that these spawning pairs occurred and so they cannot be included. Thus the GLM we used was not a hurdle model -- there was no submodel to explain the frequency of zeros. However, it different from standard negative binomial regression in that the conditional distribution was zero-truncated."
+  )
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small> 
+
+```{r 03-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Model selection results for models describing variability in one-generation reproductive success for spawning pairs. Cross type has four levels, where the female and male can be of either origin type. There is no zero model component, since pairs that produced zero progeny were never detected.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and cross type._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Male is Jack
+
+```{r 03-jack-table}
+model_RS_RRS_kable(boot_preds, digits = 2, keep_jacks_in_cross = 1,
+                   denominator = c("keep_cross_type" = "NORxNOR", "keep_cross_type" = "NORxNOR", "keep_cross_type" = "NORxNOR"),
+                   numerator = c("keep_cross_type" = "HORxHOR", "keep_cross_type" = "HORxNOR", "keep_cross_type" = "NORxHOR"),
+                   dcast_formula = year ~ variable + cross_type,
+                   is_grand = FALSE, RS_types = "resp", unit = "Spawning Pair")
+```
+
+#### (b) Male is Adult
+
+```{r 03-no-jack-table}
+model_RS_RRS_kable(boot_preds, digits = 2, keep_jacks_in_cross = 0,
+                   denominator = c("keep_cross_type" = "NORxNOR", "keep_cross_type" = "NORxNOR", "keep_cross_type" = "NORxNOR"),
+                   numerator = c("keep_cross_type" = "HORxHOR", "keep_cross_type" = "HORxNOR", "keep_cross_type" = "NORxHOR"),
+                   dcast_formula = year ~ variable + cross_type,
+                   is_grand = FALSE, RS_types = "resp", unit = "Spawning Pair")
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Model-predicted values of reproductive success (RS) by year and cross type._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S8._
+</details>
+:::
+
+```{r 03-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = FALSE`
+
+```{r 03-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 03-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Acclimation Site RRS<small> 1-Gen </small> {.tabset}
+
+```{r 04-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("04-acc-site-RRS/04-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 04-desc-table}
+desc_table(
+  y_var = "Progeny/spawner",
+  main_x_var = "Acclimation Site",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "Jack Cr.:Clark Flat; Easton:Clark Flat",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      
+      htmltools::tags$li("^a^Spawners taken as broodstock"),
+      htmltools::tags$li("^b^NOR spawners"),
+      htmltools::tags$li("^c^HOR spawners with missing acclimation site")
+    )
+  ),
+  footnote_text = c(
+    no_broodstock_footnote, 
+    "NOR spawners do not have an acclimation site, thus cannot be included.",
+    "Since acclimation site is the primary variable, spawners without this information are not useful to the analysis."
+  )
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small> 
+
+```{r 04-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success for hatchery-origin Chinook salmon.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, and acclimation site._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Male
+
+```{r 04-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M",
+  denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
+  numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
+  dcast_formula = year ~ variable + acc_site,
+  is_grand = is_grand
+)
+```
+
+#### (b) Female
+
+```{r 04-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F",
+  denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
+  numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
+  dcast_formula = year ~ variable + acc_site,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = FALSE`
+
+```{r 04-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, sex, and acclimation site._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S10._
+</details>
+:::
+
+```{r 04-rs-v-cat, out.width = "50%"}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Fig. S`r the_fig()` <small>_RRS_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Relative reproductive success (RRS) ratios from hurdle model-predicted reproductive success values of reproductive success by year, sex, and acclimation site._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S10._
+</details>
+:::
+
+```{r 04-rrs, out.width = "40%"}
+knitr::include_graphics(file.path(out_dir, "RRS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 04-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 04-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Ancestry Type RRS<small> 1-Gen </small> {.tabset}
+
+```{r 05-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("05-ancestry-RRS/05-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 05-desc-table}
+desc_table(
+  y_var = "Progeny/spawner",
+  main_x_var = "Ancestry type (i.e., parent origins [female x male] -- HORxHOR, HORxNOR, NORxHOR, NORxNOR)",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "HORxHOR:NORxNOR; HORxNOR:NORxNOR; NORxHOR:NORxNOR",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners taken as broodstock"),
+      htmltools::tags$li("^b^HOR spawners"),
+      htmltools::tags$li("^c^Spawners with unknown origin for one or both parents")
+    )
+  ),
+  footnote_text = c(
+    no_broodstock_footnote,
+    "Removed because the research question focused on fish that were the product of natural spawning.",
+    "Removed because ancestry type is the primary variable, spawners without this information are not useful to the analysis."
+  )
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small> 
+
+```{r 05-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success for natural-origin Chinook salmon.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and ancestry._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Male
+
+```{r 05-male-nzprb-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "nzprb"
+)
+```
+
+```{r 05-male-cond-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "cond"
+)
+```
+
+```{r 05-male-resp-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "resp"
+)
+```
+
+#### (b) Female
+
+```{r 05-female-nzprb-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "nzprb"
+)
+```
+
+```{r 05-female-cond-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "cond"
+)
+```
+
+```{r 05-female-resp-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F",
+  denominator = c("keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR", "keep_ancestry" = "NORxNOR"),
+  numerator = c("keep_ancestry" = "HORxHOR", "keep_ancestry" = "HORxNOR", "keep_ancestry" = "NORxHOR"),
+  dcast_formula = year ~ variable + ancestry,
+  is_grand = is_grand, RS_types = "resp"
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = FALSE`
+
+```{r 05-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year and ancestry._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S12._
+</details>
+:::
+
+```{r 05-rs-v-cat, out.width = "50%"}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 05-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 05-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Demograhic Boost<small> 1-Gen </small> {.tabset}
+
+```{r 06-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("06-1gen-demo-boost/06-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 06-desc-table}
+desc_table(
+  y_var = "Progeny/spawner",
+  main_x_var = "Spawning disposition (i.e., broodstock vs. natural)",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "Broodstock:Natural",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^HOR spawners")
+    )
+  ),
+  footnote_text = c(no_HOR_demo_boost_footnote_text)
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small>
+
+```{r 06-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Jack
+
+```{r 06-jack-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+#### (b) Male
+
+```{r 06-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
+
+```{r 06-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = TRUE`
+
+```{r 06-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 06-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S14._
+</details>
+:::
+
+```{r 06-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 06-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 06-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Demograhic Boost<small> 2-Gen </small> {.tabset}
+
+```{r 07-setup}
+## SETUP WORKSPACE FOR THIS ANALYSIS ##
+# -> sets output directory           ##
+# -> loads data                      ##
+# -> loads any existing output files ##
+source("07-2gen-demo-boost/07-00-setup.R")
+
+# create out_dir as a complete file path -- allows child .Rmds to find these files
+out_dir = file.path(proj_dir, out_dir)
+```
+
+### Overview
+
+```{r 07-desc-table}
+desc_table(
+  y_var = "Grand-progeny/spawner",
+  main_x_var = "Spawning disposition (i.e., broodstock vs. natural)",
+  other_x_vars = "Year, sex, length, day, life stage",
+  RRS = "Broodstock:Natural",
+  years = unique(as.numeric(as.character(dat$year))),
+  data_rules = as.character(
+    htmltools::tags$ul(
+      htmltools::tags$li("^a^Spawners with progeny taken as broodstock"),
+      htmltools::tags$li("^b^HOR spawners")
+    )
+  ),
+  footnote_text = c(no_F1_broodstock_footnote, no_HOR_demo_boost_footnote_text)
+)
+```
+
+### Table S`r the_tab()` <small>_AIC_</small>
+
+```{r 07-aic}
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
+```
+
+### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the RRS ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
+_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+</details>
+:::
+
+#### (a) Jack
+
+```{r 07-jack-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+#### (b) Male
+
+```{r 07-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
+
+```{r 07-female-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
+  denominator = c("keep_disposition" = "Natural"),
+  numerator = c("keep_disposition" = "Broodstock"),
+  dcast_formula = year ~ variable + disposition,
+  is_grand = is_grand
+)
+```
+
+### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+
+`r the_var = "length"; has_life_stage = TRUE`
+
+```{r 07-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 07-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+### Fig. S`r the_fig()` <small>_RS Groups_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Hurdle model-predicted values of reproductive success (RS) by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S16._
+</details>
+:::
+
+```{r 07-rs-v-cat}
+knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
+```
+
+### Misc {.tabset .tabset-dropdown}
+
+`r has_zi = TRUE`
+
+```{r 07-resids, child = file.path(supp_dir, "residual-figs-supp-template.Rmd")}
+```
+
+```{r 07-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
+```
+
+## Spawner Attributes Compared by Origin {.tabset}
+
+Because spawner size and return day are important predictors of RS, we were interested in examining whether these features differed by origin type.
+We performed two-way ANOVA analyses to test for differences in these attributes across origins by year (i.e., `lm(ATTRIBUTE ~ origin * year)`).
+For return day, we used all spawners but for length we performed three separate analyses -- one each for jacks, males, and females.
+We obtained model-predicted year-specific differences (expressed as HOR - NOR) and adjusted for multiple comparisons using the Tukey post-hoc correction (using R package ['emmeans'](https://cran.r-project.org/web/packages/emmeans/index.html)).
+
+### Fig. S`r the_fig()` <small>Differences in Means</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Year-specific differences in return day (panel a) and length (by sex/life stage; panels b-d) between HOR and NOR spawners, 2007-2016._
+_Error bars represent 95% confidence intervals and asterisks represent statistical significance after Tukey post-hoc correction._
+</details>
+:::
+
+```{r}
+knitr::include_graphics(file.path(proj_dir, "08-attr-vs-origin/attr-vs-origin.png"))
+```
