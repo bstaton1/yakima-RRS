@@ -1,0 +1,164 @@
+---
+title: "Yakima RRS MS Tables"
+output: 
+  bookdown::word_document2:
+    reference_docx: "C:/Users/bstaton/Desktop/Staton/3_general/Rmd-docx-template/Rmd-docx-template-basic-TNR.docx"
+date: "`r Sys.Date()`"
+params:
+  output_subdir: 
+    value: "output"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+
+# assign the directory where the scripts will look for them
+the_args = list(); the_args$subdir = params$output_subdir
+
+# load the package for creating Rmarkdown tables
+library(flextable)
+
+# objects to protect across scripts
+protect = c("protect", "make_data_table_one", "the_args")
+```
+
+```{r}
+source("common-functions.R")
+```
+
+```{r data-table-fns}
+# function to calculate sample size and p(success)
+# by year and origin for one sex/life stage combo
+make_data_table_one = function(dat, keep_sex, keep_life_stage) {
+  # subset the data for this sex/life stage combo
+  dat_sub = subset(dat, sex == keep_sex & life_stage == keep_life_stage)
+  
+  # calculate sample size by year and origin type
+  n = rbind(
+    with(dat_sub, tapply(y_is_zero, list(year, origin), function(x) {y = length(x); prettyNum(y, big.mark = ",")})),
+    "All Years" = with(dat_sub, tapply(y_is_zero, origin, function(x) {y = length(x); prettyNum(y, big.mark = ",")}))
+  )
+  
+  # calculation fraction of successful spawners by year and origin type
+  p_success = rbind(
+    with(dat_sub, tapply(!y_is_zero, list(year, origin), function(x) {y = mean(x); msdown::percentize(y)})),
+    "All Years" = with(dat_sub, tapply(!y_is_zero, origin, function(x) {y = mean(x); msdown::percentize(y)}))
+  )
+  
+  # paste these two together into one cell
+  out = sapply(1:2, function(i) paste0(n[,i], " (", p_success[,i], ")"))
+  
+  # create column titles
+  lab = ifelse(keep_sex == "M", ifelse(keep_life_stage == "Jack", "Jack", "Male"), "Female")
+  colnames(out) = paste0(lab, "_", colnames(n))
+  
+  # combine with year IDs and coerce to data frame
+  data.frame(year = rownames(n), out)
+}
+
+```
+
+```{r 1gen-data-table, eval = TRUE}
+source("01-1gen-RRS/01-00-setup.R")
+
+# tally the info for this data set
+out = make_data_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(make_data_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(make_data_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+
+# build the table based on the info calculated
+out |> 
+  flextable() |> 
+  theme_booktabs(bold_header = TRUE) |> 
+  set_header_labels(year = "Spawn Year", Jack_HOR = "HOR", Jack_NOR = "NOR", Male_HOR = "HOR", Male_NOR = "NOR", Female_HOR = "HOR", Female_NOR = "NOR") |> 
+  set_caption(caption = "Spawner sample sizes and proportion of successful spawners for potential parents spawning naturally from spawn years 2007-2016. Hatchery-origin (HOR) and natural-origin (HOR) males, females, and jack males are presented separately.") |> 
+  width(j = 1, width = 1) |> 
+  width(j = 2:ncol(out), width = 1) |> 
+  add_header_row(values = c(" ", "Jack Spawners", "Male Spawners", "Female Spawners"), colwidths = c(1,2,2,2)) |> 
+  font(fontname = "Times New Roman", part = "all")
+```
+
+\newpage
+
+```{r 2gen-data-table, eval = TRUE}
+source("02a-2gen-RRS/02a-00-setup.R")
+
+# tally the info for this data set
+out = make_data_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(make_data_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(make_data_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+
+# build the table based on the info calculated
+out |> 
+  flextable() |> 
+  theme_booktabs(bold_header = TRUE) |> 
+  set_header_labels(year = "Spawn Year", Jack_HOR = "HOR", Jack_NOR = "NOR", Male_HOR = "HOR", Male_NOR = "NOR", Female_HOR = "HOR", Female_NOR = "NOR") |> 
+  set_caption(caption = "Grandparent spawner sample sizes and proportion of successful grandparent spawners from spawn years 2007-2011. Hatchery-origin (HOR) and natural-origin (HOR) males, females, and jack males are presented separately.") |> 
+  width(j = 1, width = 1) |> 
+  width(j = 2:ncol(out), width = 1) |> 
+  add_header_row(values = c(" ", "Jack Spawners", "Male Spawners", "Female Spawners"), colwidths = c(1,2,2,2)) |> 
+  font(fontname = "Times New Roman", part = "all")
+```
+
+\newpage
+
+```{r models-table-prep, eval = TRUE}
+# the subdirectory for each analysis
+dirs = list.files(pattern = "^0[1-7]")
+
+# the file paths of the various output
+aic_files = file.path(dirs, the_args$subdir, "AIC_table.csv")
+best_model_files = file.path(dirs, the_args$subdir, "best_model.rds")
+
+# read in this output
+best_models = lapply(best_model_files, readRDS)
+AIC_tabs = lapply(aic_files, read.csv)
+
+# format the formula of the best model from each analysis
+formulae = unlist(lapply(best_models, function(m) format_formula(m)$cond)) |> 
+  stringr::str_replace_all("life_stage", "life stage") |> 
+  stringr::str_replace_all("cross_type", "cross type") |> 
+  stringr::str_replace_all("jacks_in_cross", "jack male") |> 
+  stringr::str_replace_all("acc_site", "acclimation site") |> 
+  stringr::str_replace_all("\\*", knitr::asis_output("\U00D7")) |> 
+  stringr::str_replace_all("I\\(day\\^2\\)", knitr::asis_output("day\U00B2")) |> 
+  stringr::str_replace_all("F1", knitr::asis_output("F\U2081"))
+
+# count the number of parameters in these models
+n_params = unlist(lapply(best_models, function(m) count_cond_coefs(m) + count_zi_coefs(m) + 1))
+
+# count the number of data points in these models
+n_obs = unlist(lapply(best_models, function(m) nrow(m$frame))) 
+
+# build the data.frame
+tab = data.frame(
+  Analysis = c(
+    "Origin Type RRS (1-Gen)",
+    "Origin Type RRS (2-Gen)",
+    "Origin Type RRS (2-Gen w/F~1~ Covariate)",
+    "Cross Type RRS (1-Gen)",
+    "Acclimation Site RRS (1-Gen)",
+    "Ancestry Type RRS (1-Gen)",
+    "Demographic Boost (1-Gen)",
+    "Demographic Boost (2-Gen)"),
+  "Zero Model" = ifelse(c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE), "Yes", "No"),
+  "Terms" = formulae,
+  "K" = n_params,
+  "N" = n_obs
+)
+```
+
+```{r models-table, eval = TRUE}
+tab |> 
+  flextable() |> 
+  theme_booktabs(bold_header = TRUE) |> 
+  # compose(j = "Terms", value = as_paragraph(as_equation(tab$Terms))) |>
+  colformat_num(j = "N", big.mark = ",") |> 
+  width(j = "Terms", width = 5) |> 
+  set_caption(caption = "Summary of the top generalized linear model selected by AIC for each analysis. Models that have a zero model included identical terms in the conditional and zero submodels. K is the number of parameters and N is the number of observations.") |> 
+  italic(j = "Terms") |> 
+  font(fontname = "Times New Roman", part = "all")
+```
