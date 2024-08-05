@@ -3,7 +3,7 @@ title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</b
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
     | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2024-07-26</small>
+    | <small>**Date Drafted**: 2024-08-05</small>
 output:
   html_document
 params:
@@ -31,15 +31,10 @@ knitr::opts_knit$set(root.dir = proj_dir)
 the_args = list(); the_args$subdir = params$output_subdir
 
 # these objects will not be removed by calling the subsequent scripts
-protect = c("protect", "fig_id", "tab_id", "the_fig", "the_tab", "proj_dir", "supp_dir", "the_args")
+protect = c("protect", "fig_id", "tab_id", "proj_dir", "supp_dir", "the_args")
 
 # initiate the id counters for figure and table IDs
-fig_id <<- 0; tab_id <<- 0
-
-# create functions to print/increment these counters
-# inc = TRUE will increment the counter +1 before printing
-the_fig = function(inc = TRUE) {fig_id <<- fig_id + ifelse(inc, 1, 0); fig_id}
-the_tab = function(inc = TRUE) {tab_id <<- tab_id + ifelse(inc, 1, 0); tab_id}
+fig_id = 0; tab_id = 0
 
 # specify table footnotes that are used more than once
 no_broodstock_footnote = "Removed because research question focuses only fish spawning naturally, not in the hatchery."
@@ -114,13 +109,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small>
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
 
 ```{r 01-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -168,7 +163,7 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = TRUE`
 
@@ -180,7 +175,7 @@ model_RS_RRS_kable(
 ```{r 01-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -194,7 +189,6 @@ _Values shown here are identical to those in Table S2._
 ```{r 01-rs-v-cat}
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
-
 
 ### Misc {.tabset .tabset-dropdown}
 
@@ -238,13 +232,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small> 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small> 
 
 ```{r 02a-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small>{.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -292,7 +286,7 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = TRUE`
 
@@ -304,7 +298,7 @@ model_RS_RRS_kable(
 ```{r 02a-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -364,13 +358,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small> 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small> 
 
 ```{r 02b-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small>{.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -418,14 +412,14 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "F1"; has_life_stage = TRUE`
 
 ```{r 02b-rs-v-cont-F1, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -440,7 +434,7 @@ _Values shown here are identical to those in Table S6._
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
 
-### Fig. S`r the_fig()` <small>_RRS_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RRS_</small>
 
 :::{.helptext}
 <details>
@@ -500,13 +494,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small> 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small> 
 
 ```{r 03-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Model selection results for models describing variability in one-generation reproductive success for spawning pairs. Cross type has four levels, where the female and male can be of either origin type. There is no zero model component, since pairs that produced zero progeny were never detected.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small>{.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -538,7 +532,7 @@ model_RS_RRS_kable(boot_preds, digits = 2, keep_jacks_in_cross = 0,
                    is_grand = FALSE, RS_types = "resp", unit = "Spawning Pair")
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -601,13 +595,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small> 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small> 
 
 ```{r 04-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success for hatchery-origin Chinook salmon.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small>{.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -643,14 +637,14 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = FALSE`
 
 ```{r 04-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -665,7 +659,7 @@ _Values shown here are identical to those in Table S10._
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
 
-### Fig. S`r the_fig()` <small>_RRS_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RRS_</small>
 
 :::{.helptext}
 <details>
@@ -727,13 +721,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small> 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small> 
 
 ```{r 05-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success for natural-origin Chinook salmon.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small>{.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small>{.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -809,14 +803,14 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = FALSE`
 
 ```{r 05-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -872,13 +866,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small>
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
 
 ```{r 06-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -926,7 +920,7 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = TRUE`
 
@@ -938,7 +932,7 @@ model_RS_RRS_kable(
 ```{r 06-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -995,13 +989,13 @@ desc_table(
 )
 ```
 
-### Table S`r the_tab()` <small>_AIC_</small>
+### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
 
 ```{r 07-aic}
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
 ```
 
-### Table S`r the_tab()` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
@@ -1049,7 +1043,7 @@ model_RS_RRS_kable(
 )
 ```
 
-### Fig. S`r the_fig()` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
 `r the_var = "length"; has_life_stage = TRUE`
 
@@ -1061,7 +1055,7 @@ model_RS_RRS_kable(
 ```{r 07-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
-### Fig. S`r the_fig()` <small>_RS Groups_</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
 
 :::{.helptext}
 <details>
@@ -1093,7 +1087,7 @@ We performed two-way ANOVA analyses to test for differences in these attributes 
 For return day, we used all spawners but for length we performed three separate analyses -- one each for jacks, males, and females.
 We obtained model-predicted year-specific differences (expressed as HOR - NOR) and adjusted for multiple comparisons using the Tukey post-hoc correction (using R package ['emmeans'](https://cran.r-project.org/web/packages/emmeans/index.html)).
 
-### Fig. S`r the_fig()` <small>Differences in Means</small>
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>Differences in Means</small>
 
 :::{.helptext}
 <details>
