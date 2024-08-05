@@ -18,7 +18,7 @@ analyses_to_run = c(
 )
 
 # or uncomment this line to skip model fitting/bootstrap
-analyses_to_run = "none"
+# analyses_to_run = "none"
 
 # SELECT ANALYSIS-LEVEL SETTINGS
 nboot = 1000        # number of bootstrap iterations
