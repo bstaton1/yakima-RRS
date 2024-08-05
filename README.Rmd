@@ -1,0 +1,158 @@
+---
+title: ""
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+> This repository stores the code used to perform the GLM analyses presented in the manuscript _Evaluating the long-term net reproductive benefits and costs of supplementation in upper Yakima River Chinook salmon_ by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P. Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J. Bosch.
+
+[![ArticleDOI](https://img.shields.io/badge/Article%20DOI%20PLACEHOLDER-blue)]()
+
+[![GitHub Repo Archive DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive%20DOI%20PLACEHOLDER-blue)]()
+
+## Data Ownership
+
+_The data file needed to run these analyses has not yet been approved for public sharing.
+Please contact the manuscript authors to receive a copy of the data set._
+
+## Repo Organization
+
+This repository contains an assortment of GLM analyses intended to address research questions about the relative reproductive success of spawning Chinook salmon in the upper Yakima River.
+
+```{r subdir-table}
+tab = matrix(c(
+  "`01-1gen-RRS`",      "Compares progeny produced by HOR and NOR spawners reproducing naturally.",
+  "`02a-2gen-RRS`",     "Compares grand-progeny produced by HOR and NOR spawners reproducing naturally.",
+  "`02b-2gen-RRS-wF1`", "Compares grand-progeny produced by HOR and NOR spawners reproducing naturally, while considering the number of progeny produced as a predictor.",
+  "`03-cross-type-RRS`",  "Compares progeny produced by spawning pairs in which the parents are of differing origin types.",
+  "`04-acc-site-RRS`",    "Compares progeny produced by HOR spawners reproducing naturally based on the site they were acclimated at as smolts.",
+  "`05-ancestry-RRS`",    "Compares progeny produced by NOR spawners reproducing naturally based on the origin types of their parents.",
+  "`06-1gen-demo-boost`", "Compares progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
+  "`07-2gen-demo-boost`", "Compares grand-progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
+  "`08-attr-v-origin`",   "Compares length and return date by origin."
+), ncol = 2, byrow = TRUE)
+
+knitr::kable(tab, "markdown", col.names = c("Subdirectory", "Description"))
+
+```
+
+Additional scripts include:
+
+* `common-functions.R`: Stores custom functions used to streamline performing replicate tasks across multiple analyses.
+* `run-one.R`: Script to execute one of the analyses shown in the table above.
+* `run-all.R`: Script to execute all of the analyses shown in the table above, and build manuscript figures, tables, and supplemental material.
+* `ms-content/ms-figs.R`: Script to build manuscript figures that rely on the output of GLM analyses.
+* `ms-content/ms-tables.Rmd`: Rmarkdown to build manuscript tables.
+* `ms-content/supplement`: Contains multiple Rmarkdown source code files for building the manuscript supplemental material.
+
+## Reproducibility
+
+The output files are too large to track in a git repo, so this code will need to be executed locally to reproduce the output presented in the manuscript and supplement. 
+
+All analyses that use random number generators (e.g., parametric bootstrapping) include a `set.seed()` statement, so our results should be exactly reproducible if all defaults are used.
+
+Clone the repository, acquire the data (see _Data Ownership_ above), and navigate to the repository location on your computer.
+
+**All Analyses At Once**
+
+The exact output presented in the manuscript can be most easily reproduced via command line, e.g.:
+
+```bash
+Rscript run-all.R
+```
+
+Or from within R:
+
+```R
+source("run-all.R")
+```
+
+This will run each of the GLM analyses in the table above sequentially, then build the manuscript figures and tables and the supplement. 
+When complete, the output will be found the `ms-content/output` subdirectory, and in the `/output` subdirectories of each analysis-specific directory.
+
+>_The default is to use 8 CPU cores to run 1,000 bootstrap iterations per GLM analysis. 
+>This takes approximately **X** hours on a current modern laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo, 24 MB Cache).
+>Similar results to those we present can be obtained with fewer bootstrap iterations -- change the value of the `nboot` variable in the `run-all.R` script to, e.g., 100 to obtain results faster._
+
+**One-by-One**
+
+Any of the specific GLM analyses can be executed with all defaults, e.g.,
+
+```bash
+Rscript run-one.R 05-ancestry-RRS
+```
+
+Or execute the script with the `-h` flag to see how to change the defaults:
+
+```bash
+Rscript run-one.R -h
+```
+
+**Interactively**
+
+Of course, you can open the `yakima-RRS.Rproj` file in [RStudio Desktop](https://posit.co/download/rstudio-desktop/) and run the scripts in each of the subdirectories interactively to gain insights about how the code works.
+
+## Dependencies
+
+The table below shows all R packages (and their versions at time of publication) that are specifically called (typically with `pkg::fn()`) or loaded (using `library(pkg)`).
+
+```{r pkg-table}
+tab = matrix(c(
+  "glmmTMB",       "Fitting/predicting from GLMs",
+  "parallel",      "Supports parallel processing for bootstrap",
+  "stringr",       "Easier manipulation of character strings",
+  "emmeans",       "Multiple comparisons (only in `08-attr-v-origin`)",
+  "knitr",         "Dynamic report generation",
+  "rmarkdown",     "Dynamic report generation",
+  "readxl",        "Loading data from `.xlsx` files",
+  "lubridate",     "Easier manipulation of dates",
+  "reshape2",      "Converting data frames from wide to long (and vice versa)",
+  "snow",          "Supports parallel processing for bootstrap",
+  "dplyr",         "Easier data summaries/data frame manipulations",
+  "scales",        "Supports transparent colors in figures",
+  "kableExtra",    "Customization of tables rendered with Rmarkdown",
+  "DHARMa",        "Generation of quantile-standardized residuals from GLMs",
+  "bookdown",      "Dynamic report generation (long-form)",
+  "shiny",         "Interactive web interfaces (used only for the `shiny::icon()` function)",
+  "rprojroot",     "Automated file/directory path detection",
+  "htmltools",     "Easier construction of HTML tags",
+  "argparser",     "Facilitates passing arguments to R scripts via command line",
+  "flextable",     "Creation/customization of tables rendered with Rmarkdown"
+), ncol = 2, byrow = TRUE)
+
+all_pkg = tab[,1]
+
+# sort alphabetically by package name
+tab = tab[order(tab[,1]),]
+
+# get the package version
+versions = sapply(tab[,1], function(pkg) paste(packageVersion(pkg), collapse = "."))
+
+tab = cbind(tab[,1], unname(versions), tab[,2])
+tab[,1] = paste0("[`", tab[,1], "`](https://CRAN.R-project.org/package=", tab[,1], ")")
+
+knitr::kable(tab, "markdown", col.names = c("Package", "Version", "Purpose"), align = "lrl")
+
+```
+
+Click below to display the exact computer set up used for all GLM analyses in the publication.
+
+<details>
+<summary>Click to Expand/Hide</summary>
+
+```{r message = FALSE, warning = FALSE}
+junk = suppressPackageStartupMessages({
+  sapply(all_pkg, library, character.only = TRUE)
+})
+```
+
+```{r}
+sessioninfo::session_info()
+```
+
+</details>
