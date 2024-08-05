@@ -6,14 +6,41 @@
 _These figures show quantile standardized residuals (QSR) from the best model, obtained using the ['DHARMa'](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html) package (Hartig [2022](https://CRAN.R-project.org/package=DHARMa)), plotted and grouped in a variety of ways._
 _QSRs are on the interval [0,1] and represent percentile of the observed value from the predictive distribution -- 'DHARMa' uses simulation to build this predictive distribution and evaluate the empirical cumulative probability density function._
 _If the model is adequate for explaining the variability in the data (signal and noise), then these should have a U(0,1) distribution -- this is true regardless of the form of the response distribution._
-
-_The interactive display method used here can render somewhat slowly -- click the right arrow several times and the plots will appear._
 </details>
 :::
 
-```{r, fig.width = 7, fig.height = 4, message = FALSE}
+```{r, fig.width = 7, fig.height = 4, message = FALSE, eval = FALSE}
 pdf_file = file.path(out_dir, "residuals.pdf")
 imgs = pdftools::pdf_convert(pdf_file, format ="png", verbose = FALSE, dpi = 100)
 slickR::slickR(imgs, height = 400)
 unlink(imgs)
+```
+
+```{r, fig.width = 7, fig.height = 4, message = FALSE, warning = FALSE, results="asis"}
+# name of the PDF file: stores residual figures
+pdf_file = file.path(out_dir, "residuals.pdf")
+
+# how many figures?
+n_pages = pdftools::pdf_length(pdf_file)
+
+# location to place the individual PNG files
+png_dir = file.path(out_dir, "resid-figs")
+if (!dir.exists(png_dir)) dir.create(png_dir)
+
+# names of the individual PNG files
+png_files = file.path(png_dir, paste0("resid-", 1:n_pages, ".png"))
+
+# create the individual PNG files
+junk = pdftools::pdf_convert(pdf = pdf_file, format ="png", filenames = png_files, verbose = FALSE, dpi = 200)
+
+# ideal method: carousel, but doesn't work
+# slickR::slickR(png_files, height = 400)
+
+# get the header names of each file
+pdf_text = pdftools::pdf_text(pdf_file)
+headers = stringr::str_extract(pdf_text, "QSR \\~ .+")
+
+# build the HTML code to insert the graphics
+x = lapply(1:n_pages, function(i) htmltools::p(htmltools::img(src = png_files[i], height = "400px"), align = "center"))
+htmltools::tagList(x)
 ```
