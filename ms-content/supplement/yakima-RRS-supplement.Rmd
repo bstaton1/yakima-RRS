@@ -207,7 +207,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("02a-2gen-RRS/02a-00-setup.R")
+rm(out_dir); source("02a-2gen-RRS/02a-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -330,7 +330,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("02b-2gen-RRS-wF1/02b-00-setup.R")
+rm(out_dir); source("02b-2gen-RRS-wF1/02b-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -466,7 +466,7 @@ knitr::include_graphics(file.path(out_dir, "RRS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("03-cross-type-RRS/03-00-setup.R")
+rm(out_dir); source("03-cross-type-RRS/03-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -564,7 +564,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("04-acc-site-RRS/04-00-setup.R")
+rm(out_dir); source("04-acc-site-RRS/04-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -691,7 +691,7 @@ knitr::include_graphics(file.path(out_dir, "RRS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("05-ancestry-RRS/05-00-setup.R")
+rm(out_dir); source("05-ancestry-RRS/05-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -842,7 +842,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("06-1gen-demo-boost/06-00-setup.R")
+rm(out_dir); source("06-1gen-demo-boost/06-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -964,7 +964,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("07-2gen-demo-boost/07-00-setup.R")
+rm(out_dir); source("07-2gen-demo-boost/07-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
