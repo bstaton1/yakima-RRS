@@ -44,8 +44,8 @@ make_data_table_one = function(dat, keep_sex, keep_life_stage) {
   
   # calculation fraction of successful spawners by year and origin type
   p_success = rbind(
-    with(dat_sub, tapply(!y_is_zero, list(year, origin), function(x) {y = mean(x); msdown::percentize(y)})),
-    "All Years" = with(dat_sub, tapply(!y_is_zero, origin, function(x) {y = mean(x); msdown::percentize(y)}))
+    with(dat_sub, tapply(!y_is_zero, list(year, origin), function(x) {y = mean(x); percentize(y)})),
+    "All Years" = with(dat_sub, tapply(!y_is_zero, origin, function(x) {y = mean(x); percentize(y)}))
   )
   
   # paste these two together into one cell

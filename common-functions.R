@@ -1325,6 +1325,23 @@ compare_RRS_plot = function(RRS_summ, RS_type = NULL, ylim = NULL, legend = FALS
 
 ##### RMARKDOWN OUTPUT FUNCTIONS #####
 
+### percentize(): CONVERT A PROPORTION TO A PERCENTAGE FOR NICE PRINTING
+# copied verbatim from bstaton1/msdown
+
+percentize = function(x, digits = 0, escape = FALSE) {
+  
+  # create a formatted percent, assuming x is a proportion (i.e., x = 1 = 100%)
+  out = paste0(round(x * 100, digits = digits), ifelse(escape, "\\%", "%"))
+  
+  # test if a value rounded to 0 needs to actually be reported as <1
+  zero_test = ifelse(escape, "0\\%", "0%")
+  lt1_replace = ifelse(escape, "<1\\%", "<1%")
+  
+  # if x > 0 but was rounded to 0, replace with <1%
+  ifelse(out == zero_test & x > 0, lt1_replace, out)
+  
+}
+
 ### desc_table(): CREATE A NICE TABLE TO SUMMARIZE KEY ASPECTS OF AN ANALYSIS ###
 
 desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = "None", footnote_text = NULL) {
