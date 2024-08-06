@@ -1,8 +1,6 @@
 ---
 title: "Yakima RRS MS Tables"
-output: 
-  bookdown::word_document2:
-    reference_docx: "C:/Users/bstaton/Desktop/Staton/3_general/Rmd-docx-template/Rmd-docx-template-basic-TNR.docx"
+output: bookdown::word_document2
 date: "`r Sys.Date()`"
 params:
   output_subdir: 
