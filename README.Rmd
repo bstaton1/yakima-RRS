@@ -76,7 +76,7 @@ This will run each of the GLM analyses in the table above sequentially, then bui
 When complete, the output will be found the `ms-content/output` subdirectory, and in the `/output` subdirectories of each analysis-specific directory.
 
 >_The default is to use 8 CPU cores to run 1,000 bootstrap iterations per GLM analysis. 
->This takes approximately **X** hours on a current modern laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo, 24 MB Cache).
+>This takes approximately 9 hours on a current modern laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo, 24 MB Cache).
 >Similar results to those we present can be obtained with fewer bootstrap iterations -- change the value of the `nboot` variable in the `run-all.R` script to, e.g., 100 to obtain results faster._
 
 **One-by-One**
@@ -122,7 +122,8 @@ tab = matrix(c(
   "rprojroot",     "Automated file/directory path detection",
   "htmltools",     "Easier construction of HTML tags",
   "argparser",     "Facilitates passing arguments to R scripts via command line",
-  "flextable",     "Creation/customization of tables rendered with Rmarkdown"
+  "flextable",     "Creation/customization of tables rendered with Rmarkdown",
+  "pdftools",      "Processing `.pdf` files"
 ), ncol = 2, byrow = TRUE)
 
 all_pkg = tab[,1]

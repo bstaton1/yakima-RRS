@@ -84,12 +84,11 @@ complete, the output will be found the `ms-content/output` subdirectory,
 and in the `/output` subdirectories of each analysis-specific directory.
 
 > *The default is to use 8 CPU cores to run 1,000 bootstrap iterations
-> per GLM analysis. This takes approximately **X** hours on a current
-> modern laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max
-> Turbo, 24 MB Cache). Similar results to those we present can be
-> obtained with fewer bootstrap iterations – change the value of the
-> `nboot` variable in the `run-all.R` script to, e.g., 100 to obtain
-> results faster.*
+> per GLM analysis. This takes approximately 9 hours on a current modern
+> laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo,
+> 24 MB Cache). Similar results to those we present can be obtained with
+> fewer bootstrap iterations – change the value of the `nboot` variable
+> in the `run-all.R` script to, e.g., 100 to obtain results faster.*
 
 **One-by-One**
 
@@ -111,8 +110,8 @@ Rscript run-one.R -h
 
 Of course, you can open the `yakima-RRS.Rproj` file in [RStudio
 Desktop](https://posit.co/download/rstudio-desktop/) and run the scripts
-for each analysis interactively to gain insights about the steps of the
-analysis.
+in each of the subdirectories interactively to gain insights about how
+the code works.
 
 ## Dependencies
 
@@ -134,6 +133,7 @@ or loaded (using `library(pkg)`).
 | [`knitr`](https://CRAN.R-project.org/package=knitr)           |       1.42 | Dynamic report generation                                               |
 | [`lubridate`](https://CRAN.R-project.org/package=lubridate)   |      1.9.2 | Easier manipulation of dates                                            |
 | [`parallel`](https://CRAN.R-project.org/package=parallel)     |      4.3.0 | Supports parallel processing for bootstrap                              |
+| [`pdftools`](https://CRAN.R-project.org/package=pdftools)     |      3.4.0 | Processing `.pdf` files                                                 |
 | [`readxl`](https://CRAN.R-project.org/package=readxl)         |      1.4.2 | Loading data from `.xlsx` files                                         |
 | [`reshape2`](https://CRAN.R-project.org/package=reshape2)     |      1.4.4 | Converting data frames from wide to long (and vice versa)               |
 | [`rmarkdown`](https://CRAN.R-project.org/package=rmarkdown)   |       2.21 | Dynamic report generation                                               |
@@ -161,7 +161,7 @@ Click to Expand/Hide
     ##  collate  English_United States.utf8
     ##  ctype    English_United States.utf8
     ##  tz       America/Los_Angeles
-    ##  date     2024-08-05
+    ##  date     2024-08-06
     ##  pandoc   2.19.2 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
     ## 
     ## ─ Packages ───────────────────────────────────────────────────────────────────
@@ -222,10 +222,12 @@ Click to Expand/Hide
     ##  numDeriv            2016.8-1.1 2019-06-06 [1] CRAN (R 4.3.0)
     ##  officer             0.6.5      2024-02-24 [1] CRAN (R 4.3.3)
     ##  openssl             2.0.6      2023-03-09 [1] CRAN (R 4.3.0)
+    ##  pdftools          * 3.4.0      2023-09-25 [1] CRAN (R 4.3.1)
     ##  pillar              1.9.0      2023-03-22 [1] CRAN (R 4.3.0)
     ##  pkgconfig           2.0.3      2019-09-22 [1] CRAN (R 4.3.0)
     ##  plyr                1.8.8      2022-11-11 [1] CRAN (R 4.3.0)
     ##  promises            1.2.0.1    2021-02-11 [1] CRAN (R 4.3.0)
+    ##  qpdf                1.3.2      2023-03-17 [1] CRAN (R 4.3.1)
     ##  R6                  2.5.1      2021-08-19 [1] CRAN (R 4.3.0)
     ##  ragg                1.2.5      2023-01-12 [1] CRAN (R 4.3.0)
     ##  Rcpp                1.0.10     2023-01-22 [1] CRAN (R 4.3.0)
