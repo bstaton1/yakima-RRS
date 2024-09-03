@@ -3,7 +3,7 @@ title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</b
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
     | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2024-08-05</small>
+    | <small>**Date Drafted**: 2024-09-04</small>
 output:
   html_document
 params:
