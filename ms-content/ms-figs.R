@@ -76,57 +76,6 @@ junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-4.png"))
 # reset the variables to protect
 protect = protect[-which(protect %in% c("boot_preds_1gen", "boot_preds_2gen"))]
 
-##### FIGURE 5: EXAMPLE CONTINUOUS RELATIONSHIPS #####
-
-# print a progress message
-cat("\n    Creating Figure 5: Example Continuous Relationships")
-
-# load the information
-source("01-1gen-RRS/01-00-setup.R")
-
-# the specific settings for the example to be shown
-the_year = 2007
-the_sex = "F"
-the_life_stage = "Adult"
-
-# initiate a panel counter; enables automating (a), (b), etc. labels
-counter = 0
-
-png(file.path(fig_dir, "Fig-5.png"), width = 7 * ppi, height = 4.5 * ppi, res = ppi)
-par(mfrow = c(2,3), mar = c(2.75,2,1.25,0.5), tcl = -0.1, mgp = c(2,0.1,0), lend = "square", ljoin = "mitre", oma = c(0,1,0,0))
-
-for (x_var in c("day_raw", "length_raw")) {
-  for (RS_type in c("cond", "nzprb", "resp")) {
-    # set the plotting function and xlim to use based on the pred_var type (day or length)
-    if (x_var == "day_raw") xlim = range(dat$day_raw[dat$sex == the_sex & dat$year == the_year])
-    if (x_var == "length_raw") xlim = range(dat$length_raw[dat$sex == the_sex & dat$year == the_year])
-
-    # set the ylimit
-    if (RS_type == "nzprb") ylim = c(0,1) else ylim = c(0,9) #ylim = c(0,max(dat$y_var[dat$sex == s & dat$year == y]))
-
-    # only draw the legend on a specific panel
-    if (RS_type == "resp" & x_var == "day_raw") legend_loc = "topright" else legend_loc = NULL
-
-    # create the plot
-    RS_v_x_plot(
-      dat = dat, boot_preds = boot_preds,
-      keep_sex = the_sex, keep_life_stage = the_life_stage, keep_year = the_year,
-      x = x_var, RS_type = RS_type, bin_width = set_bin_width(x_var),
-      groups = list(keep_origin = "NOR", keep_origin = "HOR"), legend_loc = legend_loc,
-      xlim = xlim, ylim = ylim, title = " ", include_letter = FALSE
-    )
-
-    counter = counter + 1
-    mtext(side = 3, line = 0, text = paste0("(", letters[counter], ") ", RS_name(RS_type, grand = FALSE)), font = 1, adj = 0, cex = 0.8)
-
-    if (x_var == "day_raw" & RS_type == "nzprb") mtext(side = 1, line = 1.5, "Return Day", cex = 0.9)
-    if (x_var == "length_raw" & RS_type == "nzprb") mtext(side = 1, line = 1.5, "Spawner Length (mm)", cex = 0.9)
-  }
-}
-mtext(side = 2, outer = TRUE, line = -0.5, "Reproductive Success Measure")
-
-# close the device
-junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-5.png"))
 
 ##### FIGURE 6: CROSS TYPE RRS #####
 
