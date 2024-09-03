@@ -1357,7 +1357,7 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
     ),
     x2 = c(y_var, main_x_var, other_x_vars, RRS, paste(range(years), collapse = "--"), data_rules)
   ) |> 
-    knitr::kable(caption = "Summary of the critical aspects of this analysis.", col.names = c("Aspect", "Description"), escape = FALSE) |> 
+    kableExtra::kbl(caption = "Summary of the critical aspects of this analysis.", col.names = c("Aspect", "Description"), escape = FALSE) |> 
     kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("condensed", "striped")) |> 
     kableExtra::column_spec(1, bold = TRUE, width = "200px") |> 
     kableExtra::column_spec(2, width = "450px")
@@ -1365,7 +1365,7 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
   if (!is.null(footnote_text)) {
     out = out |> 
       kableExtra::footnote(
-        alphabet = footnote_text, alphabet_title = "Data Exclusion Notes", title_format = c("italic", "underline")
+        alphabet = footnote_text, alphabet_title = "Data Exclusion Notes", title_format = c("italic", "underline"), escape = FALSE
       )
   }
   

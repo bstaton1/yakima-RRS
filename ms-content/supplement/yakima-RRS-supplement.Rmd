@@ -38,7 +38,7 @@ fig_id = 0; tab_id = 0
 
 # specify table footnotes that are used more than once
 no_broodstock_footnote = "Removed because research question focuses only fish spawning naturally, not in the hatchery."
-no_F1_broodstock_footnote = "Removed because spawners (F~0~) with progeny (F~1~) used as broodstock will have biased grand-progeny (F~2~) counts, due to improved juvenile survival of HOR fish relative to NOR fish. Thus, lineages involving only natural spawning were included."
+no_F1_broodstock_footnote = "Removed because spawners (F<sub>0</sub>) with progeny (F<sub>1</sub>) used as broodstock will have biased grand-progeny (F<sub>2</sub>) counts, due to improved juvenile survival of HOR fish relative to NOR fish. Thus, lineages involving only natural spawning were included."
 no_HOR_demo_boost_footnote_text = "The research question was focused on comparing productivity of fish spawned in the hatchery vs. in the wild. To remove potential confounding effects of recent ancestry, we used only NOR fish for this analysis; further, only NOR fish are used as broodstock."
 
 # add these to the list of protected objects
@@ -102,7 +102,7 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners taken as broodstock")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock")
     )
   ),
   footnote_text = c(no_broodstock_footnote)
@@ -224,8 +224,8 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners taken as broodstock"),
-      htmltools::tags$li("^b^Spawners with progeny taken as broodstock")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "Spawners with progeny taken as broodstock")
     )
   ),
   footnote_text = c(no_broodstock_footnote, no_F1_broodstock_footnote)
@@ -347,14 +347,14 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners taken as broodstock"),
-      htmltools::tags$li("^b^Spawners with progeny taken as broodstock"),
-      htmltools::tags$li("^c^Spawners with zero F~1~ progeny")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "Spawners with progeny taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("c", .noWS = "after"), htmltools::HTML("Spawners with zero F<sub>1</sub> progeny"))
     )
   ),
   footnote_text = c(
     no_broodstock_footnote, no_F1_broodstock_footnote,
-    "Spawners (F~0~) that produce zero progeny (F~1~) are guaranteed to produce zero grand-progeny (F~2~). If included in the hurdle model, this lack of variability at one covariate value is problematic for the zero submodel and predictions from the conditional sub-model at F~1~ = 0 will always be wrong. Thus we deemed inclusion of the F~1~ covariate required using only spawners that produced at least one F~1~ progeny; the 1-Gen Origin Type RRS analysis already established the factors driving the probability of producing zero F~1~ progeny.")
+    "Spawners (F<sub>0</sub>) that produce zero progeny (F<sub>1</sub>) are guaranteed to produce zero grand-progeny (F<sub>2</sub>). If included in the hurdle model, this lack of variability at one covariate value is problematic for the zero submodel and predictions from the conditional sub-model at F<sub>1</sub> = 0 will always be wrong. Thus we deemed inclusion of the F<sub>1</sub> covariate required using only spawners that produced at least one F<sub>1</sub> progeny; the 1-Gen Origin Type RRS analysis already established the factors driving the probability of producing zero F<sub>1</sub> progeny.")
 )
 ```
 
@@ -483,8 +483,8 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners taken as broodstock"),
-      htmltools::tags$li("^b^Spawners with zero progeny")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "Spawners with zero progeny")
     )
   ),
   footnote_text = c(
@@ -581,10 +581,9 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      
-      htmltools::tags$li("^a^Spawners taken as broodstock"),
-      htmltools::tags$li("^b^NOR spawners"),
-      htmltools::tags$li("^c^HOR spawners with missing acclimation site")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "NOR spawners"),
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "HOR spawners with missing acclimation site")
     )
   ),
   footnote_text = c(
@@ -708,9 +707,9 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners taken as broodstock"),
-      htmltools::tags$li("^b^HOR spawners"),
-      htmltools::tags$li("^c^Spawners with unknown origin for one or both parents")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "HOR spawners"),
+      htmltools::tags$li(htmltools::tags$sup("c", .noWS = "after"), "Spawners with unknown origin for one or both parents")
     )
   ),
   footnote_text = c(
@@ -859,7 +858,7 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^HOR spawners")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "HOR spawners")
     )
   ),
   footnote_text = c(no_HOR_demo_boost_footnote_text)
@@ -981,8 +980,8 @@ desc_table(
   years = unique(as.numeric(as.character(dat$year))),
   data_rules = as.character(
     htmltools::tags$ul(
-      htmltools::tags$li("^a^Spawners with progeny taken as broodstock"),
-      htmltools::tags$li("^b^HOR spawners")
+      htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "Spawners with progeny taken as broodstock"),
+      htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "HOR spawners")
     )
   ),
   footnote_text = c(no_F1_broodstock_footnote, no_HOR_demo_boost_footnote_text)
