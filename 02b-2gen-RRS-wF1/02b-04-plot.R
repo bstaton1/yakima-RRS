@@ -46,7 +46,7 @@ for (x_var in x_vars) {
 
 # quantile(out, 0.99, na.rm = TRUE)
 # max(out, na.rm = TRUE)
-y_max_cond_resp = 9
+y_max_cond_resp = 15
 
 for (RS_type in RS_types) {
   if (RS_type == "nzprb") ylim = c(0,1) else ylim = c(0,y_max_cond_resp)
@@ -59,7 +59,9 @@ for (RS_type in RS_types) {
         if (x_var == "length_raw") {
           xlim = range(dat$length_raw[dat$life_stage == life_stage])
         } else {
-          xlim = NULL
+          if (x_var == "F1") {
+            xlim = c(0, y_max_cond_resp)
+          } else xlim = NULL
         }
 
         # skip female jacks
