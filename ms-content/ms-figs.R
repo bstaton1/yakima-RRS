@@ -80,44 +80,6 @@ protect = protect[-which(protect %in% c("boot_preds_1gen", "boot_preds_2gen"))]
 ##### FIGURE 6: CROSS TYPE RRS #####
 
 # print a progress message
-cat("\n    Creating Figure 6: Cross Type RRS")
-
-# load the information
-source("03-cross-type-RRS/03-00-setup.R")
-
-# set the numerator/denominator for each ratio
-common_args = list(
-  boot_preds = boot_preds,
-  keep_jacks_in_cross = 0,
-  denominator = c(keep_cross_type = "NORxNOR")
-)
-
-# calculate ratios
-RRS_summ = rbind(
-  do.call(summarize_RRS, c(common_args, list(numerator = c(keep_cross_type = "HORxHOR")))),
-  do.call(summarize_RRS, c(common_args, list(numerator = c(keep_cross_type = "HORxNOR")))),
-  do.call(summarize_RRS, c(common_args, list(numerator = c(keep_cross_type = "NORxHOR"))))
-)
-
-# simplify group title
-RRS_summ$group = RRS_summ$numerator
-
-# create the plot figure
-ylim = c(0.5,1.5)
-counter <<- 0
-png(file.path(fig_dir, "Fig-6.png"), width = 5 * ppi, height = 4 * ppi, res = ppi)
-my_par(cex.axis = 0.9, oma = c(1.1,1.5,0,0), xaxs = "i", yaxs = "i")
-compare_RRS_plot(RRS_summ, RS_type = "resp", ylim = ylim, legend = TRUE, label_panel = FALSE, cex.legend = 0.9)
-mtext(side = 2, line = 1.35, text = "Progeny/Successful Spawning Pair", cex = 1)
-mtext(side = 1, outer = TRUE, line = 0.1, text = "Spawn Year", cex = 1)
-
-# close the device
-junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-6.png"))
-
-##### FIGURE 7: ANCESTRY TYPE RRS #####
-
-# print a progress message
-cat("\n    Creating Figure 7: Ancestry RRS")
 
 # prep the workspace for this analysis
 source("05-ancestry-RRS/05-00-setup.R")
