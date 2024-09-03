@@ -1374,7 +1374,8 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
 
 ### model_RS_RRS_kable(): CREATE A NICE TABLE REPORTING MODEL-BASED RS AND RRS ESTIMATES
 
-model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_origin" = "NOR"), numerator = c("keep_origin" = "HOR"), dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", ...) {
+model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_origin" = "NOR"), numerator = c("keep_origin" = "HOR"),
+                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", ...) {
   
   dot_args = list(...)
   
@@ -1516,6 +1517,38 @@ coef_kable = function(model, type) {
   kableExtra::kbl(tab, caption = caption) |> 
     kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("condensed", "striped")) |> 
     kableExtra::column_spec(1, monospace = TRUE, bold = TRUE)
+}
+
+### demo_boost_sample_size_table(): CALCULATES SAMPLE SIZE FOR BUIIDING TABLES
+
+# function to calculate sample size and p(success)
+# by year and disposition for one sex/life stage combo
+demo_boost_sample_size_table_one = function(dat, keep_sex, keep_life_stage) {
+  
+  # subset the data for this sex/life stage combo
+  dat_sub = subset(dat, sex == keep_sex & life_stage == keep_life_stage)
+  
+  # calculate sample size by year and origin type
+  n = rbind(
+    with(dat_sub, tapply(y_is_zero, list(year, disposition), function(x) {y = length(x); prettyNum(y, big.mark = ",")})),
+    "All Years" = with(dat_sub, tapply(y_is_zero, disposition, function(x) {y = length(x); prettyNum(y, big.mark = ",")}))
+  )
+  
+  # calculation fraction of successful spawners by year and origin type
+  p_success = rbind(
+    with(dat_sub, tapply(!y_is_zero, list(year, disposition), function(x) {y = mean(x); percentize(y)})),
+    "All Years" = with(dat_sub, tapply(!y_is_zero, disposition, function(x) {y = mean(x); percentize(y)}))
+  )
+  
+  # paste these two together into one cell
+  out = sapply(1:2, function(i) paste0(n[,i], " (", p_success[,i], ")"))
+  
+  # create column titles
+  lab = ifelse(keep_sex == "M", ifelse(keep_life_stage == "Jack", "Jack", "Male"), "Female")
+  colnames(out) = paste0(lab, "_", colnames(n))
+  
+  # combine with year IDs and coerce to data frame
+  data.frame(year = rownames(n), out)
 }
 
 ##### RESIDUAL DIAGNOSTICS FUNCTIONS #####

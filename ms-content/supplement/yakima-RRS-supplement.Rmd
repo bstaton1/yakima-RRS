@@ -880,6 +880,23 @@ desc_table(
 )
 ```
 
+### Table S`r tab_id = tab_id+1; tab_id` <small>_Sample Sizes_</small>
+
+```{r 06-sample-size}
+# tally the info for this data set
+out = demo_boost_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(demo_boost_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(demo_boost_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+
+# build the kable
+out |> 
+  kableExtra::kbl("html", col.names = c("Year", rep(c("Broodstock", "Natural"), 3)),
+                  caption = "Number of spawners by year, disposition, sex, and life stage. Values in parentheses show the percent of spawners with at least one progeny.") |> 
+  kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("condensed", "striped")) |> 
+  kableExtra::add_header_above(c(" " = 1, "Jack" = 2, "Male" = 2, "Female" = 2), bold = TRUE) |> 
+  kableExtra::column_spec(1, bold = TRUE)
+```
+
 ### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
 
 ```{r 06-aic}
@@ -1001,6 +1018,23 @@ desc_table(
   ),
   footnote_text = c(no_F1_broodstock_footnote, no_HOR_demo_boost_footnote_text)
 )
+```
+
+### Table S`r tab_id = tab_id+1; tab_id` <small>_Sample Sizes_</small>
+
+```{r 07-sample-size}
+# tally the info for this data set
+out = demo_boost_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(demo_boost_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(demo_boost_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+
+# build the kable
+out |> 
+  kableExtra::kbl("html", col.names = c("Year", rep(c("Broodstock", "Natural"), 3)),
+                  caption = "Number of spawners by year, disposition, sex and life stage. Values in parentheses show the percent of spawners with at least one grand-progeny.") |> 
+  kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("condensed", "striped")) |> 
+  kableExtra::add_header_above(c(" " = 1, "Jack" = 2, "Male" = 2, "Female" = 2), bold = TRUE) |> 
+  kableExtra::column_spec(1, bold = TRUE)
 ```
 
 ### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
