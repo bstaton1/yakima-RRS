@@ -426,7 +426,7 @@ model_RS_RRS_kable(
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) by year, origin, sex, and life stage._
 _Error bars represent 95% bootstrap confidence intervals._
-_Values shown here are identical to those in Table S6._
+_Values shown here are identical to those in Table S8._
 </details>
 :::
 
@@ -439,7 +439,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Relative reproductive success (RRS) ratios from hurdle model-predicted reproductive success values of reproductive success by year, origin, sex, and life stage._
+_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, origin, sex, and life stage._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S6._
 </details>
@@ -678,7 +678,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Relative reproductive success (RRS) ratios from hurdle model-predicted reproductive success values of reproductive success by year, sex, and acclimation site._
+_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, sex, and acclimation site._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S10._
 </details>
