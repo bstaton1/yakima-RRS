@@ -547,6 +547,21 @@ _Values shown here are identical to those in Table S8._
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
 
+### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RRS_</small>
+
+:::{.helptext}
+<details>
+<summary>`r shiny::icon("info-circle")` **Description**</summary>
+_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year and cross type._
+_Error bars represent 95% bootstrap confidence intervals._
+_Values shown here are identical to those in Table S8._
+</details>
+:::
+
+```{r 03-rrs, out.width = "50%"}
+knitr::include_graphics(file.path(out_dir, "RRS-comparisons.png"))
+```
+
 ### Misc {.tabset .tabset-dropdown}
 
 `r has_zi = FALSE`
