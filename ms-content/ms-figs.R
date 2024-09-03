@@ -77,9 +77,10 @@ junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-4.png"))
 protect = protect[-which(protect %in% c("boot_preds_1gen", "boot_preds_2gen"))]
 
 
-##### FIGURE 6: CROSS TYPE RRS #####
+##### FIGURE 5: ANCESTRY TYPE RRS #####
 
 # print a progress message
+cat("\n    Creating Figure 5: Ancestry RRS")
 
 # prep the workspace for this analysis
 source("05-ancestry-RRS/05-00-setup.R")
@@ -111,7 +112,7 @@ RRS_summ_F$group = RRS_summ_F$numerator
 # create the plot figure
 ylim = c(0,3)
 counter <<- 0
-png(file.path(fig_dir, "Fig-7.png"), width = 5 * ppi, height = 6 * ppi, res = ppi)
+png(file.path(fig_dir, "Fig-5.png"), width = 5 * ppi, height = 6 * ppi, res = ppi)
 my_par(mfcol = c(3,2), oma = c(2,2,1.5,0), cex.axis = 1, xaxs = "i", yaxs = "i")
 compare_RRS_plot(RRS_summ_M, RS_type = "cond", ylim = ylim, legend = TRUE)
 mtext(side = 2, line = 1.5, text = RS_name("cond", grand = is_grand), cex = 0.9)
@@ -128,12 +129,12 @@ compare_RRS_plot(RRS_summ_F, RS_type = "nzprb", ylim = ylim)
 compare_RRS_plot(RRS_summ_F, RS_type = "resp", ylim = ylim)
 
 # close the device
-junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-7.png"))
+junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-5.png"))
 
-##### FIGURE 8: 1GEN & 2GEN DEMO BOOST #####
+##### FIGURE 6: 1GEN & 2GEN DEMO BOOST #####
 
 # print a progress message
-cat("\n    Creating Figure 8: 1gen & 2gen demo boost")
+cat("\n    Creating Figure 6: 1gen & 2gen demo boost")
 
 # load the information
 protect = c(protect, "boot_preds_1gen", "boot_preds_2gen")
@@ -168,7 +169,7 @@ RRS_summ_2gen$group = sapply(RRS_summ_2gen$group, function(x) switch(x, "M-Jack"
 ylim = c(0,30)
 counter <<- 0
 
-png(file.path(fig_dir, "Fig-8.png"), width = 5.5 * ppi, height = 6 * ppi, res = ppi)
+png(file.path(fig_dir, "Fig-6.png"), width = 5.5 * ppi, height = 6 * ppi, res = ppi)
 my_par(mfcol = c(3,2), oma = c(2,2,1.5,2.5), cex.axis = 1, xaxs = "i", yaxs = "i")
 compare_RRS_plot(RRS_summ_1gen, RS_type = "cond", ylim = ylim, legend = TRUE)
 mtext(side = 2, line = 1.5, text = RS_name("cond", grand = FALSE), cex = 0.9)
@@ -188,7 +189,7 @@ compare_RRS_plot(RRS_summ_2gen, RS_type = "resp", ylim = ylim, yaxis_side = 2)
 mtext(side = 4, line = 0.75, text = RS_name("resp", grand = TRUE), cex = 0.9)
 
 # close the device
-junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-8.png"))
+junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-6.png"))
 
 # reset the variables to protect
 protect = protect[-which(protect %in% c("boot_preds_1gen", "boot_preds_2gen"))]
