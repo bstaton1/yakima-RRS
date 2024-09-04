@@ -11,9 +11,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 > This repository stores the code used to perform the GLM analyses presented in the manuscript _Evaluating the long-term net reproductive benefits and costs of supplementation in upper Yakima River Chinook salmon_ by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P. Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J. Bosch.
 
-[![ArticleDOI](https://img.shields.io/badge/Article%20DOI%20PLACEHOLDER-blue)]()
-
-[![GitHub Repo Archive DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive%20DOI%20PLACEHOLDER-blue)]()
+[![ArticleDOI](https://img.shields.io/badge/Article-PLACEHOLDER%20IF%20ACCEPTED-blue?logo=doi&logoColor=f5f5f5)]()  
+[![GitHub Repo Archive DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-PLACEHOLDER%20WHEN%20MINTED-blue?logo=github)]()
 
 ## Data Ownership
 
@@ -102,53 +101,58 @@ Of course, you can open the `yakima-RRS.Rproj` file in [RStudio Desktop](https:/
 The table below shows all R packages (and their versions at time of publication) that are specifically called (typically with `pkg::fn()`) or loaded (using `library(pkg)`).
 
 ```{r pkg-table}
-tab = matrix(c(
-  "glmmTMB",       "Fitting/predicting from GLMs",
-  "parallel",      "Supports parallel processing for bootstrap",
-  "stringr",       "Easier manipulation of character strings",
-  "emmeans",       "Multiple comparisons (only in `08-attr-v-origin`)",
-  "knitr",         "Dynamic report generation",
-  "rmarkdown",     "Dynamic report generation",
-  "readxl",        "Loading data from `.xlsx` files",
-  "lubridate",     "Easier manipulation of dates",
-  "reshape2",      "Converting data frames from wide to long (and vice versa)",
-  "snow",          "Supports parallel processing for bootstrap",
-  "dplyr",         "Easier data summaries/data frame manipulations",
-  "scales",        "Supports transparent colors in figures",
-  "kableExtra",    "Customization of tables rendered with Rmarkdown",
-  "DHARMa",        "Generation of quantile-standardized residuals from GLMs",
-  "bookdown",      "Dynamic report generation (long-form)",
-  "shiny",         "Interactive web interfaces (used only for the `shiny::icon()` function)",
-  "rprojroot",     "Automated file/directory path detection",
-  "htmltools",     "Easier construction of HTML tags",
-  "argparser",     "Facilitates passing arguments to R scripts via command line",
-  "flextable",     "Creation/customization of tables rendered with Rmarkdown",
-  "pdftools",      "Processing `.pdf` files"
-), ncol = 2, byrow = TRUE)
 
-all_pkg = tab[,1]
+# detect all packages called specifically
+used_pkgs = renv::dependencies(quiet = TRUE)$Package |> 
+  unique() |> 
+  sort()
 
-# sort alphabetically by package name
-tab = tab[order(tab[,1]),]
+# exclude any packages you don't wish to include in the table here
+# e.g., anything used solely in building this Rmd
+used_pkgs = used_pkgs[!used_pkgs %in% c("renv", "sessioninfo")]
 
-# get the package version
-versions = sapply(tab[,1], function(pkg) paste(packageVersion(pkg), collapse = "."))
+# get the version of each package
+versions = sapply(used_pkgs, function(pkg) paste(packageVersion(pkg), collapse = "."))
 
-tab = cbind(tab[,1], unname(versions), tab[,2])
-tab[,1] = paste0("[`", tab[,1], "`](https://CRAN.R-project.org/package=", tab[,1], ")")
+# get the description (i.e., title field of DESCRIPTION file) of each package
+desc = sapply(used_pkgs, function(pkg) paste(packageDescription(pkg)$Title, collapse = ".")) |> 
+  stringr::str_replace_all("\\n", " ")
 
-knitr::kable(tab, "markdown", col.names = c("Package", "Version", "Purpose"), align = "lrl")
+# build a matrix
+tab = cbind(pkg = used_pkgs, version = versions, desc = desc)
+rownames(tab) = NULL
 
+# build package name as a markdown link, with a URL placeholder
+tab[,"pkg"] = paste0("[`", tab[,"pkg"], "`](URL)")
+
+# function to get the URL that will replace the placeholder
+get_url = function(pkg) {
+  paste0("https://CRAN.R-project.org/package=", pkg)
+}
+
+# get the URLs for each package and perform the replacement
+tab[,"pkg"] = stringr::str_replace(tab[,"pkg"], "URL", sapply(used_pkgs, get_url))
+
+# return the kable
+kableExtra::kbl(tab, "markdown", col.names = c("Package", "Version", "Description"), align = "lrl")
 ```
 
-Click below to display the exact computer set up used for all GLM analyses in the publication.
+Running the code below will display the packages not already installed on your machine:
+
+```{r, eval = TRUE, echo = FALSE}
+check_code = paste0("```R\npkgs <- c(", knitr::combine_words(used_pkgs, before = '"', and = "", sep = ', '), ")\npkgs[!pkgs %in% rownames(installed.packages())]\n```")
+```
+
+`r check_code`
+
+## Session Info
 
 <details>
-<summary>Click to Expand/Hide</summary>
+<summary><b>Click to Expand/Hide Session Info</b></summary>
 
 ```{r message = FALSE, warning = FALSE}
 junk = suppressPackageStartupMessages({
-  sapply(all_pkg, library, character.only = TRUE)
+  sapply(used_pkgs, library, character.only = TRUE)
 })
 ```
 
