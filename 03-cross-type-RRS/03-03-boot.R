@@ -11,7 +11,7 @@ if (exists("the_args")) {
   ncpu = the_args$ncpu 
 } else {
   nboot = 1000
-  ncpu = max(min(parallel::detectCores() - 2, 8), 1)
+  ncpu = max(min(parallel::detectCores() - 2, 10), 1)
 }
 
 # run the bootstrap

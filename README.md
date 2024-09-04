@@ -82,12 +82,12 @@ then build the manuscript figures and tables and the supplement. When
 complete, the output will be found the `ms-content/output` subdirectory,
 and in the `/output` subdirectories of each analysis-specific directory.
 
-> *The default is to use 8 CPU cores to run 1,000 bootstrap iterations
-> per GLM analysis. This takes approximately 9 hours on a current modern
-> laptop computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo,
-> 24 MB Cache). Similar results to those we present can be obtained with
-> fewer bootstrap iterations – change the value of the `nboot` variable
-> in the `run-all.R` script to, e.g., 100 to obtain results faster.*
+> *The default is to use 10 CPU cores to run 1,000 bootstrap iterations
+> per GLM analysis. This takes approximately 6 hours on a modern laptop
+> computer (RAM: 64GB; Processor: 20 threads, 5.40 GHz Max Turbo, 24 MB
+> Cache). Similar results to those we present can be obtained with fewer
+> bootstrap iterations – change the value of the `nboot` variable in the
+> `run-all.R` script to, e.g., 100 to obtain results faster.*
 
 **One-by-One**
 
@@ -167,7 +167,7 @@ pkgs[!pkgs %in% rownames(installed.packages())]
     ##  collate  English_United States.utf8
     ##  ctype    English_United States.utf8
     ##  tz       America/Los_Angeles
-    ##  date     2024-09-03
+    ##  date     2024-09-04
     ##  pandoc   3.1.11 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
     ## 
     ## ─ Packages ───────────────────────────────────────────────────────────────────

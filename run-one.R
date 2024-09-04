@@ -19,7 +19,7 @@ parser = arg_parser("Fit One of the GLM Analyses", hide.opts = TRUE) |>
                type = "numeric", default = 1000) |> 
 
   add_argument("--ncpu", "Number of CPU cores to use in bootstrap parallel processing, will use `r max(parallel::detectCores() - 2, 1) if this is not available",
-               type = "numeric", default = 8) |> 
+               type = "numeric", default = 10) |> 
   
   add_argument("--fit", "Fit the models?", type = "logical", default = TRUE) |> 
   add_argument("--resid", "Create residual plots?", type = "logical", default = TRUE) |> 

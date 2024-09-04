@@ -22,7 +22,7 @@ analyses_to_run = c(
 
 # SELECT ANALYSIS-LEVEL SETTINGS
 nboot = 1000        # number of bootstrap iterations
-ncpu = 8            # number of CPUs to use for parallel processing
+ncpu = 10           # number of CPUs to use for parallel processing
 subdir = "output"   # the subdirectory to place output in each analysis directory
 
 # SELECT OUTPUT TO CREATE
