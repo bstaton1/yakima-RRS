@@ -136,7 +136,7 @@ tab = data.frame(
   Analysis = c(
     "Origin Type RRS (1-Gen)",
     "Origin Type RRS (2-Gen)",
-    "Origin Type RRS (2-Gen w/F~1~ Covariate)",
+    "Origin Type RRS (2-Gen w/F\U2081 Covariate)",
     "Cross Type RRS (1-Gen)",
     "Acclimation Site RRS (1-Gen)",
     "Ancestry Type RRS (1-Gen)",
@@ -153,7 +153,6 @@ tab = data.frame(
 tab |> 
   flextable() |> 
   theme_booktabs(bold_header = TRUE) |> 
-  # compose(j = "Terms", value = as_paragraph(as_equation(tab$Terms))) |>
   colformat_num(j = "N", big.mark = ",") |> 
   width(j = "Terms", width = 5) |> 
   set_caption(caption = "Summary of the top generalized linear model selected by AIC for each analysis. Models that have a zero model included identical terms in the conditional and zero submodels. K is the number of parameters and N is the number of observations.") |> 
