@@ -83,7 +83,7 @@ for (RS_type in RS_types) {
           x = x_var, RS_type = RS_type, bin_width = set_bin_width(x_var),
           groups = list(
             keep_ancestry = "HORxHOR", keep_ancestry = "HORxNOR",
-            keep_ancestry = "NORxHOR", keep_ancestry = "NORxHOR"
+            keep_ancestry = "NORxHOR", keep_ancestry = "NORxNOR"
           ),
           legend_loc = legend_loc,
           xlim = xlim, ylim = ylim, title = year, include_letter = TRUE
