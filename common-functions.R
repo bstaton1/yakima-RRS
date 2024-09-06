@@ -1077,7 +1077,7 @@ obs_RS_by_x = function(dat, x, xmin = NULL, xmax = NULL, bin_width, ...) {
 
 ### RS_name(): AUTO-SELECT THE NAME OF THE RS TYPE BEING DISPLAYED ###
 # for flexibly building axis/plot titles
-RS_name = function(RS_type = NULL, grand = FALSE, unit = "Spawner") {
+RS_name = function(RS_type = NULL, grand = FALSE, unit = "Spawner", is_RRS = FALSE) {
   if (is.null(RS_type)) {
     name = " "
   } else {
@@ -1085,6 +1085,8 @@ RS_name = function(RS_type = NULL, grand = FALSE, unit = "Spawner") {
     name = ifelse(grand, stringr::str_replace(name, "Progeny", "Grand-Progeny"), name)
     name = stringr::str_replace(name, "UNIT", unit)
   }
+  
+  if (is_RRS) name = stringr::str_replace(name, "^Pr\\(", "Odds\\(")
   return(name)
 }
 
