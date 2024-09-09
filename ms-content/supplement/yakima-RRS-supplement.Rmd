@@ -3,7 +3,7 @@ title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</b
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
     | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2024-09-04</small>
+    | <small>**Date Drafted**: 2024-09-09</small>
 output:
   html_document
 params:
@@ -903,13 +903,13 @@ out |>
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
 ```
 
-### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & DB_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
-_The numerator in the RRS ratio is shown as the column header._
+_Hurdle model-predicted values of reproductive success (RS) and demographic boost (DB) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the DB ratio is shown as the column header._
 _Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
 _Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
@@ -923,7 +923,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 
@@ -935,7 +935,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 
@@ -947,7 +947,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 
@@ -1040,16 +1040,16 @@ out |>
 ### Table S`r tab_id = tab_id+1; tab_id` <small>_AIC_</small>
 
 ```{r 07-aic}
-AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
+AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
 ```
 
-### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & RRS_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & DB_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
-_The numerator in the RRS ratio is shown as the column header._
+_Hurdle model-predicted values of reproductive success (RS) and demographic boost (DB) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the DB ratio is shown as the column header._
 _Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
 _Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
@@ -1063,7 +1063,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 
@@ -1075,7 +1075,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 
@@ -1087,7 +1087,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand
+  is_grand = is_grand, is_DB = TRUE
 )
 ```
 

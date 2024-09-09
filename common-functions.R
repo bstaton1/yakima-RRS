@@ -1377,7 +1377,7 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
 ### model_RS_RRS_kable(): CREATE A NICE TABLE REPORTING MODEL-BASED RS AND RRS ESTIMATES
 
 model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_origin" = "NOR"), numerator = c("keep_origin" = "HOR"),
-                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", ...) {
+                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", is_DB = FALSE, ...) {
   
   dot_args = list(...)
   
@@ -1390,8 +1390,6 @@ model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_orig
   RRS_summs = lapply(1:length(numerator), function(i) {
     do.call(summarize_RRS, c(list(boot_preds = boot_preds, numerator = numerator[i], denominator = denominator[i]), dot_args))
   }); RRS_summs = do.call(rbind, RRS_summs)
-  
-  # RRS_summs = summarize_RRS(boot_preds, numerator = numerator, denominator = denominator, ...)
   
   # function to combine mean, lwr, upr columns into one cell
   format_cells = function(df, digits) {
@@ -1443,6 +1441,10 @@ model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_orig
   
   is_RRS_column = stringr::str_detect(colnames(tab), "^RRS-")
   colnames(tab) = stringr::str_remove(colnames(tab), "^RRS-")
+  
+  if (is_DB) {
+    names(RRS_type_headers) = stringr::str_replace(names(RRS_type_headers), "RRS", "DB")
+  }
   
   has_border = cumsum(RS_type_headers)[-1]
   
