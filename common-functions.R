@@ -487,9 +487,11 @@ AIC_table = function(fits, include_zi = TRUE) {
 }
 
 ### find_best_model(): IDENTIFY THE BEST MODEL IN A LIST OF FITTED GLMS ###
-# i.e., that with the fewest parameters within 2 AIC units of lowest AIC model
+# two options:
+# select model with lowest AIC (default)
+# double-penalize complexity, i.e., that with the fewest parameters within 2 AIC units of lowest AIC model
 
-find_best_model = function(fits) {
+find_best_model = function(fits, use_lowest_valid_K = FALSE) {
   
   # which models returned errors/warnings?
   bad_fits = which(unlist(lapply(fits, class)) != "glmmTMB")
@@ -509,14 +511,18 @@ find_best_model = function(fits) {
   n_params = unlist(lapply(fits, function(fit) count_cond_coefs(fit) + count_zi_coefs(fit)))
   
   # assign models temporary ids
-  all_ids = letters[1:length(AIC_scores)]
+  all_ids = 1:length(AIC_scores)
   names(delta_scores) = names(n_params) = all_ids
   
-  # which model ids have delta scores less than or equal to 2?
-  ids_lt2 = names(which(delta_scores <= 2))
-  
-  # of these, which has the fewest parameters?
-  id_best = names(which.min(n_params[ids_lt2]))
+  if (use_lowest_valid_K) {
+    # which model ids have delta scores less than or equal to 2?
+    ids_lt2 = names(which(delta_scores <= 2))
+    
+    # of these, which has the fewest parameters?
+    id_best = names(which.min(n_params[ids_lt2]))
+  } else {
+    id_best = names(which.min(delta_scores))
+  }
   
   # return the best model
   fits[[which(all_ids == id_best)]]
