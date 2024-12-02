@@ -29,7 +29,9 @@ RS_types = c("nzprb", "cond", "resp")
 
 # xaxis label depends on the predictor variable type
 xlabs = c(
-  "F1" = "Progeny/Spawner"
+  "F1" = "Progeny/Spawner",
+  "day_raw" = "Return Date",
+  "length_raw" = "Fork Length (mm)"
 )
 
 # examine what the yaxis limits should be
