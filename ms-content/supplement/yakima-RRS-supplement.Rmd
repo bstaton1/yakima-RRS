@@ -627,11 +627,11 @@ _Grey cells have confidence intervals that overlap 1, thus lack statistical evid
 </details>
 :::
 
-#### (a) Male
+#### (a) Jack
 
-```{r 04-male-table}
+```{r 04-jack-table}
 model_RS_RRS_kable(
-  boot_preds, keep_sex = "M",
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
   denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
   numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
   dcast_formula = year ~ variable + acc_site,
@@ -639,11 +639,23 @@ model_RS_RRS_kable(
 )
 ```
 
-#### (b) Female
+#### (b) Male
+
+```{r 04-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
+  numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
+  dcast_formula = year ~ variable + acc_site,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
 
 ```{r 04-female-table}
 model_RS_RRS_kable(
-  boot_preds, keep_sex = "F",
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
   denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
   numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
   dcast_formula = year ~ variable + acc_site,
@@ -653,9 +665,14 @@ model_RS_RRS_kable(
 
 ### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
-`r the_var = "length"; has_life_stage = FALSE`
+`r the_var = "length"; has_life_stage = TRUE`
 
 ```{r 04-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 04-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
 ### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
@@ -669,7 +686,7 @@ _Values shown here are identical to those in Table S10._
 </details>
 :::
 
-```{r 04-rs-v-cat, out.width = "50%"}
+```{r 04-rs-v-cat}
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
 
