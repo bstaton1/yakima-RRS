@@ -18,11 +18,12 @@ fig_dir = file.path(out_dir, "RS-v-continuous-figs")
 if (!dir.exists(fig_dir)) dir.create(fig_dir)
 
 # file name, for replacement with looping variables
-base_file = "RS-v-PREDVAR_RSTYPE_SEX.png"
+base_file = "RS-v-PREDVAR_RSTYPE_LIFESTAGE_SEX.png"
 
 # the different values each looping variable can take on
-x_vars = c("length_raw")
+x_vars = c("length_raw", "day_raw")
 sexes = c("M", "F")
+life_stages = c("Jack", "Adult")
 years = levels(dat$year)
 RS_types = c("nzprb", "cond", "resp")
 
@@ -37,7 +38,9 @@ out = NULL
 for (x_var in x_vars) {
   for (year in years) {
     for (sex in sexes) {
-      out = c(out, obs_RS_by_x(dat, x_var, keep_year = year, keep_sex = sex, bin_width = set_bin_width(x_var))$cond)
+      for (life_stage in life_stages) {
+        out = c(out, obs_RS_by_x(dat, x_var, keep_year = year, keep_sex = sex, keep_life_stage = life_stage, bin_width = set_bin_width(x_var))$cond)
+      }
     }
   }
 }
@@ -51,54 +54,63 @@ for (RS_type in RS_types) {
   for (x_var in x_vars) {
     
     for (sex in sexes) {
-      
-      # set xaxis limits
-      xlim = NULL
-      
-      # create the file name using correct identifiers
-      file = base_file |>
-        stringr::str_replace("PREDVAR", stringr::str_remove(x_var, "_raw$")) |>
-        stringr::str_replace("RSTYPE", RS_type) |>
-        stringr::str_replace("SEX", sex)
-      cat("      ", file, "\n", sep = "")
-      
-      # open a graphics device
-      png(file.path(fig_dir, file), width = 6 * ppi, height = 4 * ppi, res = ppi)
-      
-      my_par(mfrow = c(2,3))
-      
-      # set the counter: for iterating through the panel letter labels (a), (b), etc.
-      counter <<- 0
-      
-      legend_loc = "topleft"
-      
-      for (year in years) {
+      for (life_stage in life_stages) {
+        # set xaxis limits depending on variable, and by life stage if xaxis is length
+        if (x_var == "length_raw") {
+          xlim = range(dat$length_raw[dat$life_stage == life_stage])
+        } else {
+          xlim = NULL
+        }
         
-        # only draw the legend on the first panel
-        if (year != years[1]) legend_loc = NULL
+        # skip female jacks
+        if (sex == "F" & life_stage == "Jack") next()
         
-        # create the plot
-        RS_v_x_plot(
-          dat = dat, boot_preds = boot_preds,
-          keep_sex = sex,
-          keep_year = year,
-          x = x_var, RS_type = RS_type, bin_width = set_bin_width(x_var),
-          groups = list(keep_acc_site = "Clark", keep_acc_site = "Easton", keep_acc_site = "Jack"), legend_loc = legend_loc,
-          xlim = xlim, ylim = ylim, title = year, include_letter = TRUE
-        )
+        # create the file name using correct identifiers
+        file = base_file |>
+          stringr::str_replace("PREDVAR", stringr::str_remove(x_var, "_raw$")) |>
+          stringr::str_replace("RSTYPE", RS_type) |>
+          stringr::str_replace("LIFESTAGE", life_stage) |>
+          stringr::str_replace("SEX", sex)
+        cat("      ", file, "\n", sep = "")
+        
+        # open a graphics device
+        png(file.path(fig_dir, file), width = 6 * ppi, height = 4 * ppi, res = ppi)
+        
+        my_par(mfrow = c(2,3))
+        
+        # set the counter: for iterating through the panel letter labels (a), (b), etc.
+        counter <<- 0
+        
+        legend_loc = "topleft"
+        
+        for (year in years) {
+          
+          # only draw the legend on the first panel
+          if (year != years[1]) legend_loc = NULL
+          
+          # create the plot
+          RS_v_x_plot(
+            dat = dat, boot_preds = boot_preds,
+            keep_sex = sex, keep_life_stage = life_stage, keep_year = year,
+            x = x_var, RS_type = RS_type, bin_width = set_bin_width(x_var),
+            groups = list(keep_acc_site = "Clark", keep_acc_site = "Easton", keep_acc_site = "Jack"), legend_loc = legend_loc,
+            xlim = xlim, ylim = ylim, title = year, include_letter = TRUE
+          )
+        }
+        
+        # draw the "label" panel
+        plot(1,1, type = "n", axes = FALSE, ann = FALSE, xlim = c(0,1), ylim = c(0,1))
+        text(x = 0.0, y = 0.95, labels = paste0("Life Stage: ", life_stage), pos = 4, cex = 1.5)
+        text(x = 0.0, y = 0.75, labels = paste0("Sex: ", sex), pos = 4, cex = 1.5)
+        
+        # add main axes labels
+        mtext(side = 1, outer = TRUE, line = 0.75, text = xlabs[x_var])
+        mtext(side = 2, outer = TRUE, line = 0.5, text = RS_name(RS_type, grand = is_grand))
+        
+        # close the device
+        dev.off()
+        if (interactive()) file.show(file.path(fig_dir, file))
       }
-      
-      # draw the "label" panel
-      plot(1,1, type = "n", axes = FALSE, ann = FALSE, xlim = c(0,1), ylim = c(0,1))
-      text(x = 0.0, y = 0.95, labels = paste0("Sex: ", sex), pos = 4, cex = 1.5)
-      
-      # add main axes labels
-      mtext(side = 1, outer = TRUE, line = 0.75, text = xlabs[x_var])
-      mtext(side = 2, outer = TRUE, line = 0.5, text = RS_name(RS_type, grand = is_grand))
-      
-      # close the device
-      dev.off()
-      if (interactive()) file.show(file.path(fig_dir, file))
     }
   }
 }
@@ -116,25 +128,31 @@ resp_ylim = c(0, 2.1)
 counter <<- 0
 
 # open the graphics device
-png(file.path(out_dir, "RS-comparisons.png"), width = 5 * ppi, height = 6 * ppi, res = ppi)
+png(file.path(out_dir, "RS-comparisons.png"), width = 7.5 * ppi, height = 6 * ppi, res = ppi)
 
 # graphical parameters
-my_par(mfcol = c(3,2), oma = c(2,2,1.5,0))
+my_par(mfcol = c(3,3), oma = c(2,2,1.5,0))
 
-# male column
-compare_RS_plot(boot_preds, keep_sex = "M", RS_type = "cond", dcast_formula = dcast_formula, ylim = cond_ylim)
+# jack column
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Jack", RS_type = "cond", dcast_formula = dcast_formula, ylim = cond_ylim)
 mtext(side = 2, line = 1.5, text = RS_name("cond", grand = is_grand), cex = 0.9)
-mtext(side = 3, line = 1.5, "Male Spawners", font = 2)
-compare_RS_plot(boot_preds, keep_sex = "M", RS_type = "nzprb", dcast_formula = dcast_formula, ylim = nzprb_ylim, legend = TRUE)
+mtext(side = 3, line = 1.5, "Jack Spawners", font = 2)
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Jack", RS_type = "nzprb", dcast_formula = dcast_formula, ylim = nzprb_ylim, legend = TRUE)
 mtext(side = 2, line = 1.5, text = RS_name("nzprb", grand = is_grand), cex = 0.9)
-compare_RS_plot(boot_preds, keep_sex = "M", RS_type = "resp", dcast_formula = dcast_formula, ylim = resp_ylim)
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Jack", RS_type = "resp", dcast_formula = dcast_formula, ylim = resp_ylim)
 mtext(side = 2, line = 1.5, text = RS_name("resp", grand = is_grand), cex = 0.9)
 
+# male column
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Adult", RS_type = "cond", dcast_formula = dcast_formula, ylim = cond_ylim)
+mtext(side = 3, line = 1.5, "Male Spawners", font = 2)
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Adult", RS_type = "nzprb", dcast_formula = dcast_formula, ylim = nzprb_ylim, legend = TRUE)
+compare_RS_plot(boot_preds, keep_sex = "M", keep_life_stage = "Adult", RS_type = "resp", dcast_formula = dcast_formula, ylim = resp_ylim)
+
 # female column
-compare_RS_plot(boot_preds, keep_sex = "F", RS_type = "cond", dcast_formula = dcast_formula, ylim = cond_ylim)
+compare_RS_plot(boot_preds, keep_sex = "F", keep_life_stage = "Adult",RS_type = "cond", dcast_formula = dcast_formula, ylim = cond_ylim)
 mtext(side = 3, line = 1.5, "Female Spawners", font = 2)
-compare_RS_plot(boot_preds, keep_sex = "F", RS_type = "nzprb", dcast_formula = dcast_formula, ylim = nzprb_ylim)
-compare_RS_plot(boot_preds, keep_sex = "F", RS_type = "resp", dcast_formula = dcast_formula, ylim = resp_ylim)
+compare_RS_plot(boot_preds, keep_sex = "F", keep_life_stage = "Adult",RS_type = "nzprb", dcast_formula = dcast_formula, ylim = nzprb_ylim)
+compare_RS_plot(boot_preds, keep_sex = "F", keep_life_stage = "Adult",RS_type = "resp", dcast_formula = dcast_formula, ylim = resp_ylim)
 
 # x-axis label
 mtext(side = 1, outer = TRUE, line = 0.8, text = "Spawn Year", cex = 0.8)
@@ -155,15 +173,15 @@ common_args = list(
 
 # calculate ratios
 RRS_summ = rbind(
-  do.call(summarize_RRS, c(common_args, list(keep_sex = "M", numerator = c(keep_acc_site = "Easton")))),
-  do.call(summarize_RRS, c(common_args, list(keep_sex = "M", numerator = c(keep_acc_site = "Jack")))),
-  do.call(summarize_RRS, c(common_args, list(keep_sex = "F", numerator = c(keep_acc_site = "Easton")))),
-  do.call(summarize_RRS, c(common_args, list(keep_sex = "F", numerator = c(keep_acc_site = "Jack"))))
+  do.call(summarize_RRS, c(common_args, list(keep_sex = "M", keep_life_stage = "Adult", numerator = c(keep_acc_site = "Easton")))),
+  do.call(summarize_RRS, c(common_args, list(keep_sex = "M", keep_life_stage = "Adult", numerator = c(keep_acc_site = "Jack")))),
+  do.call(summarize_RRS, c(common_args, list(keep_sex = "F", keep_life_stage = "Adult", numerator = c(keep_acc_site = "Easton")))),
+  do.call(summarize_RRS, c(common_args, list(keep_sex = "F", keep_life_stage = "Adult", numerator = c(keep_acc_site = "Jack"))))
 )
 
 # simplify group title
 RRS_summ$numerator = sapply(RRS_summ$numerator, function(x) switch(x, "Jack" = "Jack Cr.", "Easton" = "Easton"))
-RRS_summ$group = sapply(RRS_summ$group, function(x) switch(x, "M" = "Male", "F" = "Female"))
+RRS_summ$group = sapply(RRS_summ$group, function(x) switch(x, "M-Adult" = "Male", "F-Adult" = "Female"))
 RRS_summ$group = paste0(RRS_summ$group, " ", RRS_summ$numerator)
 
 # create the plot figure
