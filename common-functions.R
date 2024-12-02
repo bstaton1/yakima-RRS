@@ -601,6 +601,11 @@ make_pred_data = function(fit, dat, extra_vars = NULL) {
         tmp = use[use[,vars[j]] == combos[i,j],]
       }
       
+      # if no records exist for this combo, use all records
+      if (nrow(tmp) == 0) {
+        tmp = dat
+      }
+      
       # create the day sequence, if day is in model
       if ("day" %in% colnames(fit_dat)) {
         day_seq = make_seq(tmp$day, "day")
@@ -623,6 +628,28 @@ make_pred_data = function(fit, dat, extra_vars = NULL) {
           length_seq
         )
         if (is.null(out_seq)) out_seq = length_seq else out_seq = merge(out_seq, length_seq)
+      }
+      
+      # create the Pa_length sequence, if Pa_length is in model
+      if ("Pa_length" %in% colnames(fit_dat)) {
+        Pa_length_seq = make_seq(tmp$Pa_length, "Pa_length")
+        Pa_length_seq$Pa_length_raw = Pa_length_seq$Pa_length * sd(dat$Pa_length_raw) + mean(dat$Pa_length_raw)
+        Pa_length_seq = cbind(
+          do.call(rbind, replicate(nrow(Pa_length_seq), combos[i,], simplify = FALSE)),
+          Pa_length_seq
+        )
+        if (is.null(out_seq)) out_seq = Pa_length_seq else out_seq = merge(out_seq, Pa_length_seq)
+      }
+      
+      # create the Ma_length sequence, if Ma_length is in model
+      if ("Ma_length" %in% colnames(fit_dat)) {
+        Ma_length_seq = make_seq(tmp$Ma_length, "Ma_length")
+        Ma_length_seq$Ma_length_raw = Ma_length_seq$Ma_length * sd(dat$Ma_length_raw) + mean(dat$Ma_length_raw)
+        Ma_length_seq = cbind(
+          do.call(rbind, replicate(nrow(Ma_length_seq), combos[i,], simplify = FALSE)),
+          Ma_length_seq
+        )
+        if (is.null(out_seq)) out_seq = Ma_length_seq else out_seq = merge(out_seq, Ma_length_seq)
       }
       
       # create the F1 sequence, if F1 is in model
@@ -805,7 +832,8 @@ bootstrap = function(fit, dat, nboot = 500, ncpu = max(parallel::detectCores() -
 
 my_filter = function(x, keep_year = NULL, keep_origin = NULL, keep_sex = NULL, keep_life_stage = NULL, keep_jacks_in_cross = NULL,
                      keep_cross_type = NULL, keep_acc_site = NULL, keep_disposition = NULL, keep_ancestry = NULL, 
-                     use_mean_day = TRUE, use_mean_length = TRUE, use_mean_F1 = TRUE, use_only_iter_0 = FALSE, drop_iter_0 = FALSE) {
+                     use_mean_day = TRUE, use_mean_length = TRUE, use_mean_F1 = TRUE, use_mean_Pa_length = TRUE, use_mean_Ma_length = TRUE,
+                     use_only_iter_0 = FALSE, drop_iter_0 = FALSE) {
   
   # what are the variables in the data frame?
   vars = colnames(x)
@@ -867,6 +895,8 @@ my_filter = function(x, keep_year = NULL, keep_origin = NULL, keep_sex = NULL, k
   # handle whether to return only the mean value for continuous predictors
   if ("is_mean_day" %in% vars & use_mean_day) x = subset(x, is_mean_day)
   if ("is_mean_length" %in% vars & use_mean_length) x = subset(x, is_mean_length)
+  if ("is_mean_Pa_length" %in% vars & use_mean_Pa_length) x = subset(x, is_mean_Pa_length)
+  if ("is_mean_Ma_length" %in% vars & use_mean_Ma_length) x = subset(x, is_mean_Ma_length)
   if ("is_mean_F1" %in% vars & use_mean_F1) x = subset(x, is_mean_F1)
   
   # handle whether to use only iter_0 or exclude iter_0
@@ -1029,7 +1059,7 @@ format_day_bins = function(day_bins, year = 2007) {
 # allows changing this just one place; only used for plotting
 
 set_bin_width = function(x_var) {
-  switch(x_var, "F1" = 1, "day_raw" = 5, "length_raw" = 10)
+  switch(x_var, "F1" = 1, "day_raw" = 5, "length_raw" = 10, "Pa_length_raw" = 10, "Ma_length_raw" = 10)
 }
 
 ### obs_RS_by_x(): CALCULATE AVERAGE RS BASED ON A CATEGORIZED CONTINOUS VARIABLE ###
@@ -1111,7 +1141,7 @@ RS_v_x_plot = function(dat, boot_preds, x, RS_type, xmin = NULL, xmax = NULL, bi
   # set arguments
   dot_args = list(...)
   dat_summ_args = list(dat = dat, x = x, xmin = xmin, xmax = xmax, bin_width = bin_width)
-  use_mean_args = list(use_mean_length = x != "length_raw", use_mean_day = x != "day_raw", use_mean_F1 = x != "F1")
+  use_mean_args = list(use_mean_length = x != "length_raw", use_mean_day = x != "day_raw", use_mean_F1 = x != "F1", use_mean_Pa_length = x != "Pa_length_raw", use_mean_Ma_length = x != "Ma_length_raw")
   
   # summarize bootstrap output
   RS_summ = lapply(1:length(groups), function(g) do.call(summarize_RS, c(list(boot_preds = boot_preds), dot_args, use_mean_args, groups[g])))
