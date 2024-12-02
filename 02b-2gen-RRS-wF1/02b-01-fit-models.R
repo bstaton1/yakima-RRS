@@ -69,6 +69,8 @@ formulae = list(
   ~ year * sex + length * sex + length * life_stage + day + I(day^2) + F1,
   ~ year * sex + length * life_stage + day + I(day^2) + F1 * origin,
   ~ year * sex + length * sex + length * life_stage + day + I(day^2) + F1 * origin,
+  ~ year * sex + F1 * year + origin,
+  ~ year * sex + F1 * year + origin * sex
 )
 
 # fit all these models
