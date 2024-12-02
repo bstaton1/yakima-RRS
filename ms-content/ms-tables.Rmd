@@ -121,6 +121,8 @@ formulae = unlist(lapply(best_models, function(m) format_formula(m)$cond)) |>
   stringr::str_replace_all("cross_type", "cross type") |> 
   stringr::str_replace_all("jacks_in_cross", "jack male") |> 
   stringr::str_replace_all("acc_site", "acclimation site") |> 
+  stringr::str_replace_all("Pa_length", "male length") |> 
+  stringr::str_replace_all("Ma_length", "female length") |> 
   stringr::str_replace_all("\\*", knitr::asis_output("\U00D7")) |> 
   stringr::str_replace_all("I\\(day\\^2\\)", knitr::asis_output("day\U00B2")) |> 
   stringr::str_replace_all("F1", knitr::asis_output("F\U2081"))
