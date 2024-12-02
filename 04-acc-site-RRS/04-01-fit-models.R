@@ -12,14 +12,24 @@ formulae = list(
   ~ sex,
   ~ year,
   ~ year * acc_site,
+  ~ year * sex,
+  ~ acc_site * sex,
   ~ year * sex * acc_site,
   ~ year * sex * acc_site + life_stage,
   ~ year * sex * acc_site + length,
+  ~ year * sex * acc_site + length * sex,
   ~ year * sex * acc_site + length * life_stage,
+  ~ year * sex * acc_site + length * sex + length * life_stage,
   ~ year * sex * acc_site + day,
+  ~ year * sex * acc_site + day * sex,
   ~ year * sex * acc_site + day + I(day^2),
+  ~ year * sex * acc_site + day * sex + I(day^2),
   ~ year * sex * acc_site + life_stage * length + day,
-  ~ year * sex * acc_site + life_stage * length + day + I(day^2)
+  ~ year * sex * acc_site + life_stage * length + day + I(day^2),
+  ~ year * sex * acc_site + length * sex + life_stage * length + day,
+  ~ year * sex * acc_site + length * sex + life_stage * length + day + I(day^2),
+  ~ year * sex * acc_site + length * sex + life_stage * length + day * sex,
+  ~ year * sex * acc_site + length * sex + life_stage * length + day * sex + I(day^2)
 )
 
 # fit all these models
