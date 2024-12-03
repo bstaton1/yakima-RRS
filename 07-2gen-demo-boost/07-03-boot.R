@@ -3,7 +3,7 @@
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("07-2gen-demo-boost/07-00-setup.R")
+source("07-2gen-percapita-prod/07-00-setup.R")
 
 # set bootstrap dimensions; use the args object if it exists
 if (exists("the_args")) {

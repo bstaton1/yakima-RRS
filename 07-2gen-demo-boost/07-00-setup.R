@@ -9,14 +9,14 @@ set.seed(1234)
 source("common-functions.R")
 
 # set the output directory & create it if doesn't exist
-the_dir = "07-2gen-demo-boost"
+the_dir = "07-2gen-percapita-prod"
 if (exists("the_args")) subdir = the_args$subdir else subdir = "output"
 out_dir = file.path(the_dir, subdir)
 if (!dir.exists(out_dir)) dir.create(out_dir)
 is_grand = TRUE
 
 # build the data set for this analysis
-dat = build_dataset(rrs_type = "multi_gen_demo_boost")
+dat = build_dataset(rrs_type = "multi_gen_percapita_prod")
 
 # load all fitted models (if file exists)
 inFile = file.path(out_dir, "fits.rds")

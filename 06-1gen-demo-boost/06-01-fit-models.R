@@ -3,7 +3,7 @@
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("06-1gen-demo-boost/06-00-setup.R")
+source("06-1gen-percapita-prod/06-00-setup.R")
 
 # build the formulae for candidate models
 formulae = list(

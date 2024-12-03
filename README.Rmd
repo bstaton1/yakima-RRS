@@ -31,8 +31,8 @@ tab = matrix(c(
   "`03-cross-type-RRS`",  "Compares progeny produced by spawning pairs in which the parents are of differing origin types.",
   "`04-acc-site-RRS`",    "Compares progeny produced by HOR spawners reproducing naturally based on the site they were acclimated at as smolts.",
   "`05-ancestry-RRS`",    "Compares progeny produced by NOR spawners reproducing naturally based on the origin types of their parents.",
-  "`06-1gen-demo-boost`", "Compares progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
-  "`07-2gen-demo-boost`", "Compares grand-progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
+  "`06-1gen-percapita-prod`", "Compares progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
+  "`07-2gen-percapita-prod`", "Compares grand-progeny produced by NOR spawners based on where they reproduced -- either naturally or in the hatchery as broodstock.",
   "`08-attr-v-origin`",   "Compares length and return date by origin."
 ), ncol = 2, byrow = TRUE)
 

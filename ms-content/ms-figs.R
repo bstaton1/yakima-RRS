@@ -131,15 +131,15 @@ compare_RRS_plot(RRS_summ_F, RS_type = "resp", ylim = ylim)
 # close the device
 junk = dev.off(); if (interactive()) file.show(file.path(fig_dir, "Fig-5.png"))
 
-##### FIGURE 6: 1GEN & 2GEN DEMO BOOST #####
+##### FIGURE 6: 1GEN & 2GEN PER CAPITA PRODUCITIVITY #####
 
 # print a progress message
-cat("\n    Creating Figure 6: 1gen & 2gen demo boost")
+cat("\n    Creating Figure 6: 1gen & 2gen per capita productivity")
 
 # load the information
 protect = c(protect, "boot_preds_1gen", "boot_preds_2gen")
-source("06-1gen-demo-boost/06-00-setup.R"); boot_preds_1gen = boot_preds
-source("07-2gen-demo-boost/07-00-setup.R"); boot_preds_2gen = boot_preds
+source("06-1gen-percapita-prod/06-00-setup.R"); boot_preds_1gen = boot_preds
+source("07-2gen-percapita-prod/07-00-setup.R"); boot_preds_2gen = boot_preds
 
 # set the numerator/denominator for each ratio
 common_args = list(

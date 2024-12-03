@@ -63,7 +63,7 @@ standardize_origin = function(x) {
 format_dataset = function(rrs_type, inFile = default_inFile) {
   
   # return informative error if analysis type is not accepted
-  accepted_types = c("single_gen", "multi_gen", "cross_type", "acc_site", "ancestry", "single_gen_demo_boost", "multi_gen_demo_boost")
+  accepted_types = c("single_gen", "multi_gen", "cross_type", "acc_site", "ancestry", "single_gen_percapita_prod", "multi_gen_percapita_prod")
   if (!rrs_type %in% accepted_types) {
     stop ("rrs_type ", "('", rrs_type, "') not accepted. Accepted options are:\n  ",
           knitr::combine_words(accepted_types, and = "or", before = "'"))
@@ -72,7 +72,7 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   # determine some basic aspects of the data type to build
   is_multi_gen = stringr::str_detect(rrs_type, "multi_gen")
   is_single_gen = !is_multi_gen
-  is_demo_boost = stringr::str_detect(rrs_type, "demo_boost")
+  is_percapita_prod = stringr::str_detect(rrs_type, "percapita_prod")
   
   # step 0: load the data file
   # sheet to extract depends on whether it is the cross_type analysis or something else
@@ -93,12 +93,12 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   
   # step 2b: filter to only origins of interest
   #  - acc_site analyses only deal with HOR spawners
-  #  - demo_boost analyses only deal with NOR spawners (either taken for broodstock or spawning in wild)
+  #  - percapita_prod analyses only deal with NOR spawners (either taken for broodstock or spawning in wild)
   #  - everything else compares RS by origin, so need both origins
   if (rrs_type == "acc_site") {
     keep_origins = c("HOR")
   } else {
-    if (is_demo_boost) {
+    if (is_percapita_prod) {
       keep_origins = c("NOR")
     } else {
       keep_origins = c("HOR", "NOR")
@@ -143,9 +143,9 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   }
   
   # step 6: filter disposition types to keep
-  #  - demographic boost calculations compare progeny per naturally spawning fish to progeny per broodstock fish -- need both
+  #  - per capita productivity calculations compare progeny per naturally spawning fish to progeny per broodstock fish -- need both
   #  - all other analyses compare wild spawning fish, so only need natural
-  if (is_demo_boost) {
+  if (is_percapita_prod) {
     keep_dispositions = c("Natural", "Broodstock")
   } else {
     keep_dispositions = "Natural"
@@ -196,7 +196,7 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
     keep_vars = c("year", "cross_type", "Pa_id", "Ma_id", "Pa_origin", "Ma_origin", "Pa_life_stage", "Ma_life_stage", "jacks_in_cross", "Pa_length", "Ma_length", "Pa_day", "Ma_day", "Pa_day_raw", "Ma_day_raw", "Pa_length_raw", "Ma_length_raw")
   } else {
     keep_vars = c("year", "id", "origin", "sex", "length", "day", "life_stage", "length_raw", "day_raw")
-    if (is_demo_boost) keep_vars = c(keep_vars, "disposition")
+    if (is_percapita_prod) keep_vars = c(keep_vars, "disposition")
     if (rrs_type == "acc_site") {
       keep_vars = c(keep_vars, "acc_site")
       dat$acc_site = stringr::str_remove(dat$acc_site, "Creek|Flat")
@@ -234,8 +234,8 @@ build_dataset = function(rrs_type, use_F1 = FALSE, inFile = default_inFile) {
   # determine whether this is a multigenerational data set
   is_multi_gen = stringr::str_detect(rrs_type, "multi_gen")
   
-  # determine whether this is a demographic boost data set
-  is_demo_boost = stringr::str_detect(rrs_type, "demo_boost")
+  # determine whether this is a per capita productivity data set
+  is_percapita_prod = stringr::str_detect(rrs_type, "percapita_prod")
   
   # notify user F1 = TRUE will be ignored if single gen
   if (use_F1 & !is_multi_gen) {
@@ -247,11 +247,11 @@ build_dataset = function(rrs_type, use_F1 = FALSE, inFile = default_inFile) {
   if (use_F1 & is_multi_gen) {
     
     # get the number of F1 progeny produced per spawner
-    dat1 = format_dataset(rrs_type = paste0("single_gen", ifelse(is_demo_boost, "_demo_boost", "")), inFile = inFile)
+    dat1 = format_dataset(rrs_type = paste0("single_gen", ifelse(is_percapita_prod, "_percapita_prod", "")), inFile = inFile)
     dat1 = dat1[,c("id","y_var")]; colnames(dat1)[2] = "F1"
     
     # get the number of F2 progeny produced per spawner
-    dat2 = format_dataset(rrs_type = paste0("multi_gen", ifelse(is_demo_boost, "_demo_boost", "")), inFile = inFile)
+    dat2 = format_dataset(rrs_type = paste0("multi_gen", ifelse(is_percapita_prod, "_percapita_prod", "")), inFile = inFile)
     
     # combine them
     dat = merge(dat1, dat2, by = "id"); rm(dat1, dat2)
@@ -1413,7 +1413,7 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
 ### model_RS_RRS_kable(): CREATE A NICE TABLE REPORTING MODEL-BASED RS AND RRS ESTIMATES
 
 model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_origin" = "NOR"), numerator = c("keep_origin" = "HOR"),
-                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", is_DB = FALSE, ...) {
+                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", is_PCP = FALSE, ...) {
   
   dot_args = list(...)
   
@@ -1478,8 +1478,8 @@ model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_orig
   is_RRS_column = stringr::str_detect(colnames(tab), "^RRS-")
   colnames(tab) = stringr::str_remove(colnames(tab), "^RRS-")
   
-  if (is_DB) {
-    names(RRS_type_headers) = stringr::str_replace(names(RRS_type_headers), "RRS", "DB")
+  if (is_PCP) {
+    names(RRS_type_headers) = stringr::str_replace(names(RRS_type_headers), "RRS", "PCP")
   }
   
   has_border = cumsum(RS_type_headers)[-1]
@@ -1559,11 +1559,11 @@ coef_kable = function(model, type) {
     kableExtra::column_spec(1, monospace = TRUE, bold = TRUE)
 }
 
-### demo_boost_sample_size_table(): CALCULATES SAMPLE SIZE FOR BUIIDING TABLES
+### percapita_prod_sample_size_table(): CALCULATES SAMPLE SIZE FOR BUIIDING TABLES
 
 # function to calculate sample size and p(success)
 # by year and disposition for one sex/life stage combo
-demo_boost_sample_size_table_one = function(dat, keep_sex, keep_life_stage) {
+percapita_prod_sample_size_table_one = function(dat, keep_sex, keep_life_stage) {
   
   # subset the data for this sex/life stage combo
   dat_sub = subset(dat, sex == keep_sex & life_stage == keep_life_stage)
