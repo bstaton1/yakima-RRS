@@ -3,7 +3,7 @@ title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</b
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
     | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2024-11-27</small>
+    | <small>**Date Drafted**: 2024-12-03</small>
 output:
   html_document
 params:
@@ -122,8 +122,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -245,8 +245,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -371,8 +371,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -506,9 +506,9 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Model selection results
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and cross type._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is NORxNOR._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -620,10 +620,10 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, and acclimation site._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, life stage, and acclimation site._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is Clark Flat._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -680,7 +680,7 @@ model_RS_RRS_kable(
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) by year, sex, and acclimation site._
+_Hurdle model-predicted values of reproductive success (RS) by year, sex, life stage, and acclimation site._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S10._
 </details>
@@ -695,7 +695,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, sex, and acclimation site._
+_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, sex, life stage and acclimation site._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S10._
 </details>
@@ -763,10 +763,10 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and ancestry._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, and ancestry._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is NORxNOR._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -846,7 +846,7 @@ model_RS_RRS_kable(
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) by year and ancestry._
+_Hurdle model-predicted values of reproductive success (RS) by year, sex, and ancestry._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S12._
 </details>
@@ -927,8 +927,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and per capita productivity (PCP) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
 _The numerator in the PCP ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -1065,10 +1065,10 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and per capita productivity (DB) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_Hurdle model-predicted values of reproductive success (RS) and per capita productivity (PCP) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
 _The numerator in the PCP ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
