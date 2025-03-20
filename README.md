@@ -4,9 +4,10 @@
 > benefits and costs of supplementation in upper Yakima River Chinook
 > salmon* by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P.
 > Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J.
-> Bosch.
+> Bosch; now accepted for publication in the *Canadian Journal of
+> Fisheries and Aquatic Sciences*.
 
-[![ArticleDOI](https://img.shields.io/badge/Article-PLACEHOLDER%20IF%20ACCEPTED-blue?logo=doi&logoColor=f5f5f5)]()  
+[![ArticleDOI](https://img.shields.io/badge/Article-10.1139/cjfas--2024--0289-blue?logo=doi&logoColor=f5f5f5)](https://doi.org/10.1139/cjfas-2024-0289)  
 [![GitHub Repo Archive
 DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-10.5281/zenodo.13738201-blue?logo=github)](https://doi.org/10.5281/zenodo.13738201)
 
@@ -167,7 +168,7 @@ pkgs[!pkgs %in% rownames(installed.packages())]
     ##  collate  English_United States.utf8
     ##  ctype    English_United States.utf8
     ##  tz       America/Los_Angeles
-    ##  date     2024-12-03
+    ##  date     2025-03-20
     ##  pandoc   3.1.11 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
     ## 
     ## ─ Packages ───────────────────────────────────────────────────────────────────

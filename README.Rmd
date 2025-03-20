@@ -9,9 +9,9 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-> This repository stores the code used to perform the GLM analyses presented in the manuscript _Evaluating the long-term net reproductive benefits and costs of supplementation in upper Yakima River Chinook salmon_ by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P. Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J. Bosch.
+> This repository stores the code used to perform the GLM analyses presented in the manuscript _Evaluating the long-term net reproductive benefits and costs of supplementation in upper Yakima River Chinook salmon_ by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P. Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J. Bosch; now accepted for publication in the _Canadian Journal of Fisheries and Aquatic Sciences_.
 
-[![ArticleDOI](https://img.shields.io/badge/Article-PLACEHOLDER%20IF%20ACCEPTED-blue?logo=doi&logoColor=f5f5f5)]()  
+[![ArticleDOI](https://img.shields.io/badge/Article-10.1139/cjfas--2024--0289-blue?logo=doi&logoColor=f5f5f5)](https://doi.org/10.1139/cjfas-2024-0289)  
 [![GitHub Repo Archive DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-10.5281/zenodo.13738201-blue?logo=github)](https://doi.org/10.5281/zenodo.13738201)
 
 ## Data Ownership
