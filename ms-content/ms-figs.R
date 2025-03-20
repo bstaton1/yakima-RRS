@@ -166,7 +166,7 @@ RRS_summ_1gen$group = sapply(RRS_summ_1gen$group, function(x) switch(x, "M-Jack"
 RRS_summ_2gen$group = sapply(RRS_summ_2gen$group, function(x) switch(x, "M-Jack" = "Jack", "M-Adult" = "Male", "F-Adult" = "Female"))
 
 # create the plot figure
-ylim = c(0,30)
+ylim = c(0,80)
 counter <<- 0
 
 png(file.path(fig_dir, "Fig-6.png"), width = 5.5 * ppi, height = 6 * ppi, res = ppi)
