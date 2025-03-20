@@ -1514,6 +1514,12 @@ AIC_kable = function(AIC_tab, best_model, has_zi = TRUE, caption = NULL, markdow
   # sort models by increasing delta scores
   AIC_tab = AIC_tab[order(AIC_tab$delta),]
   
+  # drop the I() from quadratic syntax
+  AIC_tab$cond_form = stringr::str_remove_all(AIC_tab$cond_form, stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
+  AIC_tab$zi_form = stringr::str_remove_all(AIC_tab$zi_form, stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
+  
   first_col_header = ifelse(has_zi, " <small>(Identical for Conditional and Zero Submodels)</small>", " <small>(No Zero Submodel)</small>")
   
   if (markdown) {
@@ -1550,6 +1556,9 @@ coef_kable = function(model, type) {
   tab = as.data.frame(summary(model)$coef[[type]])
   tab[,"Pr(>|z|)"] = ifelse(tab[,"Pr(>|z|)"] < 0.001, "<0.001", as.character(round(tab[,"Pr(>|z|)"], 3)))
   tab[,c("Estimate", "Std. Error", "z value")] = round(tab[,c("Estimate", "Std. Error", "z value")], 2)
+  
+  rownames(tab) = stringr::str_remove_all(rownames(tab), stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
   
   caption = "Coefficient estimates from the SUBMODEL submodel." |> 
     stringr::str_replace("SUBMODEL", ifelse(type == "cond", "conditional", "zero"))
