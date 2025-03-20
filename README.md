@@ -8,7 +8,7 @@
 
 [![ArticleDOI](https://img.shields.io/badge/Article-PLACEHOLDER%20IF%20ACCEPTED-blue?logo=doi&logoColor=f5f5f5)]()  
 [![GitHub Repo Archive
-DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-PLACEHOLDER%20WHEN%20MINTED-blue?logo=github)]()
+DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-10.5281/zenodo.13738201-blue?logo=github)](https://doi.org/10.5281/zenodo.13738201)
 
 ## Data Ownership
 
@@ -22,17 +22,17 @@ This repository contains an assortment of GLM analyses intended to
 address research questions about the relative reproductive success of
 spawning Chinook salmon in the upper Yakima River.
 
-| Subdirectory         | Description                                                                                                                                     |
-|:---------------------|:------------------------------------------------------------------------------------------------------------------------------------------------|
-| `01-1gen-RRS`        | Compares progeny produced by HOR and NOR spawners reproducing naturally.                                                                        |
-| `02a-2gen-RRS`       | Compares grand-progeny produced by HOR and NOR spawners reproducing naturally.                                                                  |
-| `02b-2gen-RRS-wF1`   | Compares grand-progeny produced by HOR and NOR spawners reproducing naturally, while considering the number of progeny produced as a predictor. |
-| `03-cross-type-RRS`  | Compares progeny produced by spawning pairs in which the parents are of differing origin types.                                                 |
-| `04-acc-site-RRS`    | Compares progeny produced by HOR spawners reproducing naturally based on the site they were acclimated at as smolts.                            |
-| `05-ancestry-RRS`    | Compares progeny produced by NOR spawners reproducing naturally based on the origin types of their parents.                                     |
-| `06-1gen-demo-boost` | Compares progeny produced by NOR spawners based on where they reproduced – either naturally or in the hatchery as broodstock.                   |
-| `07-2gen-demo-boost` | Compares grand-progeny produced by NOR spawners based on where they reproduced – either naturally or in the hatchery as broodstock.             |
-| `08-attr-v-origin`   | Compares length and return date by origin.                                                                                                      |
+| Subdirectory             | Description                                                                                                                                     |
+|:-------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------|
+| `01-1gen-RRS`            | Compares progeny produced by HOR and NOR spawners reproducing naturally.                                                                        |
+| `02a-2gen-RRS`           | Compares grand-progeny produced by HOR and NOR spawners reproducing naturally.                                                                  |
+| `02b-2gen-RRS-wF1`       | Compares grand-progeny produced by HOR and NOR spawners reproducing naturally, while considering the number of progeny produced as a predictor. |
+| `03-cross-type-RRS`      | Compares progeny produced by spawning pairs in which the parents are of differing origin types.                                                 |
+| `04-acc-site-RRS`        | Compares progeny produced by HOR spawners reproducing naturally based on the site they were acclimated at as smolts.                            |
+| `05-ancestry-RRS`        | Compares progeny produced by NOR spawners reproducing naturally based on the origin types of their parents.                                     |
+| `06-1gen-percapita-prod` | Compares progeny produced by NOR spawners based on where they reproduced – either naturally or in the hatchery as broodstock.                   |
+| `07-2gen-percapita-prod` | Compares grand-progeny produced by NOR spawners based on where they reproduced – either naturally or in the hatchery as broodstock.             |
+| `08-attr-v-origin`       | Compares length and return date by origin.                                                                                                      |
 
 Additional scripts include:
 
@@ -167,7 +167,7 @@ pkgs[!pkgs %in% rownames(installed.packages())]
     ##  collate  English_United States.utf8
     ##  ctype    English_United States.utf8
     ##  tz       America/Los_Angeles
-    ##  date     2024-09-04
+    ##  date     2024-12-03
     ##  pandoc   3.1.11 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
     ## 
     ## ─ Packages ───────────────────────────────────────────────────────────────────

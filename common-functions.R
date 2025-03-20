@@ -63,7 +63,7 @@ standardize_origin = function(x) {
 format_dataset = function(rrs_type, inFile = default_inFile) {
   
   # return informative error if analysis type is not accepted
-  accepted_types = c("single_gen", "multi_gen", "cross_type", "acc_site", "ancestry", "single_gen_demo_boost", "multi_gen_demo_boost")
+  accepted_types = c("single_gen", "multi_gen", "cross_type", "acc_site", "ancestry", "single_gen_percapita_prod", "multi_gen_percapita_prod")
   if (!rrs_type %in% accepted_types) {
     stop ("rrs_type ", "('", rrs_type, "') not accepted. Accepted options are:\n  ",
           knitr::combine_words(accepted_types, and = "or", before = "'"))
@@ -72,7 +72,7 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   # determine some basic aspects of the data type to build
   is_multi_gen = stringr::str_detect(rrs_type, "multi_gen")
   is_single_gen = !is_multi_gen
-  is_demo_boost = stringr::str_detect(rrs_type, "demo_boost")
+  is_percapita_prod = stringr::str_detect(rrs_type, "percapita_prod")
   
   # step 0: load the data file
   # sheet to extract depends on whether it is the cross_type analysis or something else
@@ -93,12 +93,12 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   
   # step 2b: filter to only origins of interest
   #  - acc_site analyses only deal with HOR spawners
-  #  - demo_boost analyses only deal with NOR spawners (either taken for broodstock or spawning in wild)
+  #  - percapita_prod analyses only deal with NOR spawners (either taken for broodstock or spawning in wild)
   #  - everything else compares RS by origin, so need both origins
   if (rrs_type == "acc_site") {
     keep_origins = c("HOR")
   } else {
-    if (is_demo_boost) {
+    if (is_percapita_prod) {
       keep_origins = c("NOR")
     } else {
       keep_origins = c("HOR", "NOR")
@@ -143,9 +143,9 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   }
   
   # step 6: filter disposition types to keep
-  #  - demographic boost calculations compare progeny per naturally spawning fish to progeny per broodstock fish -- need both
+  #  - per capita productivity calculations compare progeny per naturally spawning fish to progeny per broodstock fish -- need both
   #  - all other analyses compare wild spawning fish, so only need natural
-  if (is_demo_boost) {
+  if (is_percapita_prod) {
     keep_dispositions = c("Natural", "Broodstock")
   } else {
     keep_dispositions = "Natural"
@@ -196,7 +196,7 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
     keep_vars = c("year", "cross_type", "Pa_id", "Ma_id", "Pa_origin", "Ma_origin", "Pa_life_stage", "Ma_life_stage", "jacks_in_cross", "Pa_length", "Ma_length", "Pa_day", "Ma_day", "Pa_day_raw", "Ma_day_raw", "Pa_length_raw", "Ma_length_raw")
   } else {
     keep_vars = c("year", "id", "origin", "sex", "length", "day", "life_stage", "length_raw", "day_raw")
-    if (is_demo_boost) keep_vars = c(keep_vars, "disposition")
+    if (is_percapita_prod) keep_vars = c(keep_vars, "disposition")
     if (rrs_type == "acc_site") {
       keep_vars = c(keep_vars, "acc_site")
       dat$acc_site = stringr::str_remove(dat$acc_site, "Creek|Flat")
@@ -234,8 +234,8 @@ build_dataset = function(rrs_type, use_F1 = FALSE, inFile = default_inFile) {
   # determine whether this is a multigenerational data set
   is_multi_gen = stringr::str_detect(rrs_type, "multi_gen")
   
-  # determine whether this is a demographic boost data set
-  is_demo_boost = stringr::str_detect(rrs_type, "demo_boost")
+  # determine whether this is a per capita productivity data set
+  is_percapita_prod = stringr::str_detect(rrs_type, "percapita_prod")
   
   # notify user F1 = TRUE will be ignored if single gen
   if (use_F1 & !is_multi_gen) {
@@ -247,11 +247,11 @@ build_dataset = function(rrs_type, use_F1 = FALSE, inFile = default_inFile) {
   if (use_F1 & is_multi_gen) {
     
     # get the number of F1 progeny produced per spawner
-    dat1 = format_dataset(rrs_type = paste0("single_gen", ifelse(is_demo_boost, "_demo_boost", "")), inFile = inFile)
+    dat1 = format_dataset(rrs_type = paste0("single_gen", ifelse(is_percapita_prod, "_percapita_prod", "")), inFile = inFile)
     dat1 = dat1[,c("id","y_var")]; colnames(dat1)[2] = "F1"
     
     # get the number of F2 progeny produced per spawner
-    dat2 = format_dataset(rrs_type = paste0("multi_gen", ifelse(is_demo_boost, "_demo_boost", "")), inFile = inFile)
+    dat2 = format_dataset(rrs_type = paste0("multi_gen", ifelse(is_percapita_prod, "_percapita_prod", "")), inFile = inFile)
     
     # combine them
     dat = merge(dat1, dat2, by = "id"); rm(dat1, dat2)
@@ -487,9 +487,11 @@ AIC_table = function(fits, include_zi = TRUE) {
 }
 
 ### find_best_model(): IDENTIFY THE BEST MODEL IN A LIST OF FITTED GLMS ###
-# i.e., that with the fewest parameters within 2 AIC units of lowest AIC model
+# two options:
+# select model with lowest AIC (default)
+# double-penalize complexity, i.e., that with the fewest parameters within 2 AIC units of lowest AIC model
 
-find_best_model = function(fits) {
+find_best_model = function(fits, use_lowest_valid_K = FALSE) {
   
   # which models returned errors/warnings?
   bad_fits = which(unlist(lapply(fits, class)) != "glmmTMB")
@@ -509,14 +511,18 @@ find_best_model = function(fits) {
   n_params = unlist(lapply(fits, function(fit) count_cond_coefs(fit) + count_zi_coefs(fit)))
   
   # assign models temporary ids
-  all_ids = letters[1:length(AIC_scores)]
+  all_ids = 1:length(AIC_scores)
   names(delta_scores) = names(n_params) = all_ids
   
-  # which model ids have delta scores less than or equal to 2?
-  ids_lt2 = names(which(delta_scores <= 2))
-  
-  # of these, which has the fewest parameters?
-  id_best = names(which.min(n_params[ids_lt2]))
+  if (use_lowest_valid_K) {
+    # which model ids have delta scores less than or equal to 2?
+    ids_lt2 = names(which(delta_scores <= 2))
+    
+    # of these, which has the fewest parameters?
+    id_best = names(which.min(n_params[ids_lt2]))
+  } else {
+    id_best = names(which.min(delta_scores))
+  }
   
   # return the best model
   fits[[which(all_ids == id_best)]]
@@ -595,6 +601,11 @@ make_pred_data = function(fit, dat, extra_vars = NULL) {
         tmp = use[use[,vars[j]] == combos[i,j],]
       }
       
+      # if no records exist for this combo, use all records
+      if (nrow(tmp) == 0) {
+        tmp = dat
+      }
+      
       # create the day sequence, if day is in model
       if ("day" %in% colnames(fit_dat)) {
         day_seq = make_seq(tmp$day, "day")
@@ -617,6 +628,28 @@ make_pred_data = function(fit, dat, extra_vars = NULL) {
           length_seq
         )
         if (is.null(out_seq)) out_seq = length_seq else out_seq = merge(out_seq, length_seq)
+      }
+      
+      # create the Pa_length sequence, if Pa_length is in model
+      if ("Pa_length" %in% colnames(fit_dat)) {
+        Pa_length_seq = make_seq(tmp$Pa_length, "Pa_length")
+        Pa_length_seq$Pa_length_raw = Pa_length_seq$Pa_length * sd(dat$Pa_length_raw) + mean(dat$Pa_length_raw)
+        Pa_length_seq = cbind(
+          do.call(rbind, replicate(nrow(Pa_length_seq), combos[i,], simplify = FALSE)),
+          Pa_length_seq
+        )
+        if (is.null(out_seq)) out_seq = Pa_length_seq else out_seq = merge(out_seq, Pa_length_seq)
+      }
+      
+      # create the Ma_length sequence, if Ma_length is in model
+      if ("Ma_length" %in% colnames(fit_dat)) {
+        Ma_length_seq = make_seq(tmp$Ma_length, "Ma_length")
+        Ma_length_seq$Ma_length_raw = Ma_length_seq$Ma_length * sd(dat$Ma_length_raw) + mean(dat$Ma_length_raw)
+        Ma_length_seq = cbind(
+          do.call(rbind, replicate(nrow(Ma_length_seq), combos[i,], simplify = FALSE)),
+          Ma_length_seq
+        )
+        if (is.null(out_seq)) out_seq = Ma_length_seq else out_seq = merge(out_seq, Ma_length_seq)
       }
       
       # create the F1 sequence, if F1 is in model
@@ -799,7 +832,8 @@ bootstrap = function(fit, dat, nboot = 500, ncpu = max(parallel::detectCores() -
 
 my_filter = function(x, keep_year = NULL, keep_origin = NULL, keep_sex = NULL, keep_life_stage = NULL, keep_jacks_in_cross = NULL,
                      keep_cross_type = NULL, keep_acc_site = NULL, keep_disposition = NULL, keep_ancestry = NULL, 
-                     use_mean_day = TRUE, use_mean_length = TRUE, use_mean_F1 = TRUE, use_only_iter_0 = FALSE, drop_iter_0 = FALSE) {
+                     use_mean_day = TRUE, use_mean_length = TRUE, use_mean_F1 = TRUE, use_mean_Pa_length = TRUE, use_mean_Ma_length = TRUE,
+                     use_only_iter_0 = FALSE, drop_iter_0 = FALSE) {
   
   # what are the variables in the data frame?
   vars = colnames(x)
@@ -861,6 +895,8 @@ my_filter = function(x, keep_year = NULL, keep_origin = NULL, keep_sex = NULL, k
   # handle whether to return only the mean value for continuous predictors
   if ("is_mean_day" %in% vars & use_mean_day) x = subset(x, is_mean_day)
   if ("is_mean_length" %in% vars & use_mean_length) x = subset(x, is_mean_length)
+  if ("is_mean_Pa_length" %in% vars & use_mean_Pa_length) x = subset(x, is_mean_Pa_length)
+  if ("is_mean_Ma_length" %in% vars & use_mean_Ma_length) x = subset(x, is_mean_Ma_length)
   if ("is_mean_F1" %in% vars & use_mean_F1) x = subset(x, is_mean_F1)
   
   # handle whether to use only iter_0 or exclude iter_0
@@ -1023,7 +1059,7 @@ format_day_bins = function(day_bins, year = 2007) {
 # allows changing this just one place; only used for plotting
 
 set_bin_width = function(x_var) {
-  switch(x_var, "F1" = 1, "day_raw" = 5, "length_raw" = 10)
+  switch(x_var, "F1" = 1, "day_raw" = 5, "length_raw" = 10, "Pa_length_raw" = 10, "Ma_length_raw" = 10)
 }
 
 ### obs_RS_by_x(): CALCULATE AVERAGE RS BASED ON A CATEGORIZED CONTINOUS VARIABLE ###
@@ -1105,7 +1141,7 @@ RS_v_x_plot = function(dat, boot_preds, x, RS_type, xmin = NULL, xmax = NULL, bi
   # set arguments
   dot_args = list(...)
   dat_summ_args = list(dat = dat, x = x, xmin = xmin, xmax = xmax, bin_width = bin_width)
-  use_mean_args = list(use_mean_length = x != "length_raw", use_mean_day = x != "day_raw", use_mean_F1 = x != "F1")
+  use_mean_args = list(use_mean_length = x != "length_raw", use_mean_day = x != "day_raw", use_mean_F1 = x != "F1", use_mean_Pa_length = x != "Pa_length_raw", use_mean_Ma_length = x != "Ma_length_raw")
   
   # summarize bootstrap output
   RS_summ = lapply(1:length(groups), function(g) do.call(summarize_RS, c(list(boot_preds = boot_preds), dot_args, use_mean_args, groups[g])))
@@ -1377,7 +1413,7 @@ desc_table = function(y_var, main_x_var, other_x_vars, RRS, years, data_rules = 
 ### model_RS_RRS_kable(): CREATE A NICE TABLE REPORTING MODEL-BASED RS AND RRS ESTIMATES
 
 model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_origin" = "NOR"), numerator = c("keep_origin" = "HOR"),
-                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", is_DB = FALSE, ...) {
+                              dcast_formula = year ~ variable + origin, is_grand, RS_types = c("nzprb", "cond", "resp"), unit = "Spawner", is_PCP = FALSE, ...) {
   
   dot_args = list(...)
   
@@ -1442,8 +1478,8 @@ model_RS_RRS_kable = function(boot_preds, digits = 2, denominator = c("keep_orig
   is_RRS_column = stringr::str_detect(colnames(tab), "^RRS-")
   colnames(tab) = stringr::str_remove(colnames(tab), "^RRS-")
   
-  if (is_DB) {
-    names(RRS_type_headers) = stringr::str_replace(names(RRS_type_headers), "RRS", "DB")
+  if (is_PCP) {
+    names(RRS_type_headers) = stringr::str_replace(names(RRS_type_headers), "RRS", "PCP")
   }
   
   has_border = cumsum(RS_type_headers)[-1]
@@ -1477,6 +1513,12 @@ AIC_kable = function(AIC_tab, best_model, has_zi = TRUE, caption = NULL, markdow
   
   # sort models by increasing delta scores
   AIC_tab = AIC_tab[order(AIC_tab$delta),]
+  
+  # drop the I() from quadratic syntax
+  AIC_tab$cond_form = stringr::str_remove_all(AIC_tab$cond_form, stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
+  AIC_tab$zi_form = stringr::str_remove_all(AIC_tab$zi_form, stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
   
   first_col_header = ifelse(has_zi, " <small>(Identical for Conditional and Zero Submodels)</small>", " <small>(No Zero Submodel)</small>")
   
@@ -1515,6 +1557,9 @@ coef_kable = function(model, type) {
   tab[,"Pr(>|z|)"] = ifelse(tab[,"Pr(>|z|)"] < 0.001, "<0.001", as.character(round(tab[,"Pr(>|z|)"], 3)))
   tab[,c("Estimate", "Std. Error", "z value")] = round(tab[,c("Estimate", "Std. Error", "z value")], 2)
   
+  rownames(tab) = stringr::str_remove_all(rownames(tab), stringr::fixed("I(")) |> 
+    stringr::str_replace_all(stringr::fixed("^2)"), "^2")
+  
   caption = "Coefficient estimates from the SUBMODEL submodel." |> 
     stringr::str_replace("SUBMODEL", ifelse(type == "cond", "conditional", "zero"))
   
@@ -1523,11 +1568,11 @@ coef_kable = function(model, type) {
     kableExtra::column_spec(1, monospace = TRUE, bold = TRUE)
 }
 
-### demo_boost_sample_size_table(): CALCULATES SAMPLE SIZE FOR BUIIDING TABLES
+### percapita_prod_sample_size_table(): CALCULATES SAMPLE SIZE FOR BUIIDING TABLES
 
 # function to calculate sample size and p(success)
 # by year and disposition for one sex/life stage combo
-demo_boost_sample_size_table_one = function(dat, keep_sex, keep_life_stage) {
+percapita_prod_sample_size_table_one = function(dat, keep_sex, keep_life_stage) {
   
   # subset the data for this sex/life stage combo
   dat_sub = subset(dat, sex == keep_sex & life_stage == keep_life_stage)

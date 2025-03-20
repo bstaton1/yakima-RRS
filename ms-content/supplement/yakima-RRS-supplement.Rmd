@@ -3,7 +3,7 @@ title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</b
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
     | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2024-09-09</small>
+    | <small>**Date Drafted**: 2025-01-08</small>
 output:
   html_document
 params:
@@ -39,10 +39,10 @@ fig_id = 0; tab_id = 0
 # specify table footnotes that are used more than once
 no_broodstock_footnote = "Removed because research question focuses only fish spawning naturally, not in the hatchery."
 no_F1_broodstock_footnote = "Removed because spawners (F<sub>0</sub>) with progeny (F<sub>1</sub>) used as broodstock will have biased grand-progeny (F<sub>2</sub>) counts, due to improved juvenile survival of HOR fish relative to NOR fish. Thus, lineages involving only natural spawning were included."
-no_HOR_demo_boost_footnote_text = "The research question was focused on comparing productivity of fish spawned in the hatchery vs. in the wild. To remove potential confounding effects of recent ancestry, we used only NOR fish for this analysis; further, only NOR fish are used as broodstock."
+no_HOR_percapita_prod_footnote_text = "The research question was focused on comparing productivity of fish spawned in the hatchery vs. in the wild. To remove potential confounding effects of recent ancestry, we used only NOR fish for this analysis; further, only NOR fish are used as broodstock."
 
 # add these to the list of protected objects
-protect = c(protect, "no_broodstock_footnote", "no_F1_broodstock_footnote", "no_HOR_demo_boost_footnote_text")
+protect = c(protect, "no_broodstock_footnote", "no_F1_broodstock_footnote", "no_HOR_percapita_prod_footnote_text")
 ```
 
 ```{css}
@@ -122,8 +122,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -245,8 +245,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -371,8 +371,8 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, origin, sex, and life stage._
 _The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -506,9 +506,9 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Model selection results
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and cross type._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is NORxNOR._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -620,18 +620,18 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, and acclimation site._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, life stage, and acclimation site._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is Clark Flat._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
-#### (a) Male
+#### (a) Jack
 
-```{r 04-male-table}
+```{r 04-jack-table}
 model_RS_RRS_kable(
-  boot_preds, keep_sex = "M",
+  boot_preds, keep_sex = "M", keep_life_stage = "Jack",
   denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
   numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
   dcast_formula = year ~ variable + acc_site,
@@ -639,11 +639,23 @@ model_RS_RRS_kable(
 )
 ```
 
-#### (b) Female
+#### (b) Male
+
+```{r 04-male-table}
+model_RS_RRS_kable(
+  boot_preds, keep_sex = "M", keep_life_stage = "Adult",
+  denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
+  numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
+  dcast_formula = year ~ variable + acc_site,
+  is_grand = is_grand
+)
+```
+
+#### (c) Female
 
 ```{r 04-female-table}
 model_RS_RRS_kable(
-  boot_preds, keep_sex = "F",
+  boot_preds, keep_sex = "F", keep_life_stage = "Adult",
   denominator = c("keep_acc_site" = "Clark", "keep_acc_site" = "Clark"),
   numerator = c("keep_acc_site" = "Easton", "keep_acc_site" = "Jack"),
   dcast_formula = year ~ variable + acc_site,
@@ -653,9 +665,14 @@ model_RS_RRS_kable(
 
 ### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Relationships_</small> {.tabset .tabset-dropdown}
 
-`r the_var = "length"; has_life_stage = FALSE`
+`r the_var = "length"; has_life_stage = TRUE`
 
 ```{r 04-rs-v-cont-length, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
+```
+
+`r the_var = "day"; has_life_stage = TRUE`
+
+```{r 04-rs-v-cont-day, child = file.path(supp_dir, "relationship-figs-supp-template.Rmd")}
 ```
 
 ### Fig. S`r fig_id = fig_id+1; fig_id` <small>_RS Groups_</small>
@@ -663,13 +680,13 @@ model_RS_RRS_kable(
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) by year, sex, and acclimation site._
+_Hurdle model-predicted values of reproductive success (RS) by year, sex, life stage, and acclimation site._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S10._
 </details>
 :::
 
-```{r 04-rs-v-cat, out.width = "50%"}
+```{r 04-rs-v-cat}
 knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```
 
@@ -678,7 +695,7 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, sex, and acclimation site._
+_Relative reproductive success (RRS) ratios from hurdle model-predicted values by year, sex, life stage and acclimation site._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S10._
 </details>
@@ -746,10 +763,10 @@ AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year and ancestry._
-_The numerator in the RRS ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and relative reproductive success (RRS) ratios by year, sex, and ancestry._
+_The numerator in the RRS ratio is shown as the column header and in all cases the denominator is NORxNOR._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -829,7 +846,7 @@ model_RS_RRS_kable(
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) by year and ancestry._
+_Hurdle model-predicted values of reproductive success (RS) by year, sex, and ancestry._
 _Error bars represent 95% bootstrap confidence intervals._
 _Values shown here are identical to those in Table S12._
 </details>
@@ -849,14 +866,14 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```{r 05-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
 ```
 
-## Demograhic Boost<small> 1-Gen </small> {.tabset}
+## Per Capita Productivity<small> 1-Gen </small> {.tabset}
 
 ```{r 06-setup}
 ## SETUP WORKSPACE FOR THIS ANALYSIS ##
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-rm(out_dir); source("06-1gen-demo-boost/06-00-setup.R")
+rm(out_dir); source("06-1gen-percapita-prod/06-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -876,7 +893,7 @@ desc_table(
       htmltools::tags$li(htmltools::tags$sup("a", .noWS = "after"), "HOR spawners")
     )
   ),
-  footnote_text = c(no_HOR_demo_boost_footnote_text)
+  footnote_text = c(no_HOR_percapita_prod_footnote_text)
 )
 ```
 
@@ -884,9 +901,9 @@ desc_table(
 
 ```{r 06-sample-size}
 # tally the info for this data set
-out = demo_boost_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
-  merge(demo_boost_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
-  merge(demo_boost_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+out = percapita_prod_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(percapita_prod_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(percapita_prod_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
 
 # build the kable
 out |> 
@@ -903,15 +920,15 @@ out |>
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in one-generation reproductive success.")
 ```
 
-### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & DB_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & PCP_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and demographic boost (DB) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
-_The numerator in the DB ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and per capita productivity (PCP) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the PCP ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -923,7 +940,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -935,7 +952,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -947,7 +964,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -970,7 +987,7 @@ model_RS_RRS_kable(
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) by year, disposition (broodstock vs. natural spawning), sex, and life stage._
 _Error bars represent 95% bootstrap confidence intervals._
-_Values shown here are identical to those in Table S14._
+_Values shown here are identical to those in Table S15._
 </details>
 :::
 
@@ -988,14 +1005,14 @@ knitr::include_graphics(file.path(out_dir, "RS-comparisons.png"))
 ```{r 06-coefs, child = file.path(supp_dir, "coef-tables-supp-template.Rmd")}
 ```
 
-## Demograhic Boost<small> 2-Gen </small> {.tabset}
+## Per Capita Productivity <small> 2-Gen </small> {.tabset}
 
 ```{r 07-setup}
 ## SETUP WORKSPACE FOR THIS ANALYSIS ##
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-rm(out_dir); source("07-2gen-demo-boost/07-00-setup.R")
+rm(out_dir); source("07-2gen-percapita-prod/07-00-setup.R")
 
 # create out_dir as a complete file path -- allows child .Rmds to find these files
 out_dir = file.path(proj_dir, out_dir)
@@ -1016,7 +1033,7 @@ desc_table(
       htmltools::tags$li(htmltools::tags$sup("b", .noWS = "after"), "HOR spawners")
     )
   ),
-  footnote_text = c(no_F1_broodstock_footnote, no_HOR_demo_boost_footnote_text)
+  footnote_text = c(no_F1_broodstock_footnote, no_HOR_percapita_prod_footnote_text)
 )
 ```
 
@@ -1024,9 +1041,9 @@ desc_table(
 
 ```{r 07-sample-size}
 # tally the info for this data set
-out = demo_boost_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
-  merge(demo_boost_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
-  merge(demo_boost_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
+out = percapita_prod_sample_size_table_one(dat = dat, keep_sex = "M", keep_life_stage = "Jack") |> 
+  merge(percapita_prod_sample_size_table_one(dat, keep_sex = "M", keep_life_stage = "Adult"), by = "year") |> 
+  merge(percapita_prod_sample_size_table_one(dat, keep_sex = "F", keep_life_stage = "Adult"), by = "year")
 
 # build the kable
 out |> 
@@ -1043,15 +1060,15 @@ out |>
 AIC_kable(AIC_tab, best_model, has_zi = TRUE, caption = "Hurdle model selection results for models describing variability in two-generation reproductive success.")
 ```
 
-### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & DB_</small> {.tabset .tabset-pills}
+### Table S`r tab_id = tab_id+1; tab_id` <small>_RS & PCP_</small> {.tabset .tabset-pills}
 
 :::{.helptext}
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
-_Hurdle model-predicted values of reproductive success (RS) and demographic boost (DB) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
-_The numerator in the DB ratio is shown as the column header._
-_Larger numbers in cells are point estimates and smaller values in parentheses are 95% bootstrap confidence intervals._
-_Grey cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
+_Hurdle model-predicted values of reproductive success (RS) and per capita productivity (PCP) ratios by year, disposition (broodstock vs. natural spawning), sex, and life stage._
+_The numerator in the PCP ratio is shown as the column header._
+_Larger numbers in cells are point estimates and smaller numbers in parentheses are 95% bootstrap confidence intervals._
+_Gray cells have confidence intervals that overlap 1, thus lack statistical evidence for a difference in reproductive success._
 </details>
 :::
 
@@ -1063,7 +1080,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -1075,7 +1092,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -1087,7 +1104,7 @@ model_RS_RRS_kable(
   denominator = c("keep_disposition" = "Natural"),
   numerator = c("keep_disposition" = "Broodstock"),
   dcast_formula = year ~ variable + disposition,
-  is_grand = is_grand, is_DB = TRUE
+  is_grand = is_grand, is_PCP = TRUE
 )
 ```
 
@@ -1110,7 +1127,7 @@ model_RS_RRS_kable(
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _Hurdle model-predicted values of reproductive success (RS) by year, disposition (broodstock vs. natural spawning), sex, and life stage._
 _Error bars represent 95% bootstrap confidence intervals._
-_Values shown here are identical to those in Table S16._
+_Values shown here are identical to those in Table S18._
 </details>
 :::
 

@@ -12,8 +12,8 @@ analyses_to_run = c(
   "03",     # cross-type-RRS
   "04",     # acc-site-RRS
   "05",     # ancestry-type
-  "06",     # 1gen-demo-boost
-  "07",     # 2gen-demo-boost
+  "06",     # 1gen-percapita-prod
+  "07",     # 2gen-percapita-prod
   "08"      # attr-v-origin
 )
 
@@ -49,8 +49,8 @@ all_analyses = c(
   "03"  = "03-cross-type-RRS",
   "04"  = "04-acc-site-RRS",
   "05"  = "05-ancestry-RRS",
-  "06"  = "06-1gen-demo-boost",
-  "07"  = "07-2gen-demo-boost",
+  "06"  = "06-1gen-percapita-prod",
+  "07"  = "07-2gen-percapita-prod",
   "08"  = "08-attr-vs-origin/08-fit-plot.R"
 )
 

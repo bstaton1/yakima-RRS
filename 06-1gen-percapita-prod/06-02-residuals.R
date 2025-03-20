@@ -3,7 +3,7 @@
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("07-2gen-demo-boost/07-00-setup.R")
+source("06-1gen-percapita-prod/06-00-setup.R")
 
 # format the data set for plotting residuals
 resid_dat = prep_resid_df(

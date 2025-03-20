@@ -4,7 +4,7 @@
 <details>
 <summary>`r shiny::icon("info-circle")` **Description**</summary>
 _These figures show quantile standardized residuals (QSR) from the best model, obtained using the ['DHARMa'](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html) package (Hartig [2022](https://CRAN.R-project.org/package=DHARMa)), plotted and grouped in a variety of ways._
-_QSRs are on the interval [0,1] and represent percentile of the observed value from the predictive distribution -- 'DHARMa' uses simulation to build this predictive distribution and evaluate the empirical cumulative probability density function._
+_QSRs are on the interval [0,1] and represent the quantile of the observed value from the predictive distribution -- 'DHARMa' uses simulation to build this predictive distribution for evaluating the empirical cumulative probability density function._
 _If the model is adequate for explaining the variability in the data (signal and noise), then these should have a U(0,1) distribution -- this is true regardless of the form of the response distribution._
 </details>
 :::

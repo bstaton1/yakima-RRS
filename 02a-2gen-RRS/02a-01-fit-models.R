@@ -6,6 +6,7 @@
 source("02a-2gen-RRS/02a-00-setup.R")
 
 # build the formulae for candidate models
+# build the formulae for candidate models
 formulae = list(
   ~ 1,
   ~ origin,
@@ -14,23 +15,39 @@ formulae = list(
   ~ origin * year * sex,
   ~ origin * year * sex + life_stage,
   ~ origin * year * sex + length,
+  ~ origin * year * sex + length * sex,
   ~ origin * year * sex + length * life_stage,
+  ~ origin * year * sex + length * sex + length * life_stage,
   ~ origin * year * sex + day,
+  ~ origin * year * sex + day * sex,
   ~ origin * year * sex + day + I(day^2),
+  ~ origin * year * sex + day * sex + I(day^2),
   ~ origin * year * sex + length * life_stage + day + I(day^2),
   ~ origin * year * sex + length * life_stage + day * year + I(day^2),
   ~ origin * year * sex + length * life_stage + day + I(day^2) * year,
   ~ origin * year * sex + length * life_stage + day * year + I(day^2) * year,
+  ~ origin * year * sex + length * sex + length * life_stage + day * sex + I(day^2),
+  ~ origin * year * sex + length * sex + length * life_stage + day * sex + day * year + I(day^2),
+  ~ origin * year * sex + length * sex + length * life_stage + day * sex + I(day^2) * year,
+  ~ origin * year * sex + length * sex + length * life_stage + day * sex + day * year + I(day^2) * year,
   ~ year * sex,
   ~ year * sex + life_stage,
   ~ year * sex + length,
+  ~ year * sex + length * sex,
   ~ year * sex + length * life_stage,
+  ~ year * sex + length * sex + length * life_stage,
   ~ year * sex + day,
+  ~ year * sex + day * sex,
   ~ year * sex + day + I(day^2),
+  ~ year * sex + day * sex + I(day^2),
   ~ year * sex + length * life_stage + day + I(day^2),
   ~ year * sex + length * life_stage + day * year + I(day^2),
   ~ year * sex + length * life_stage + day + I(day^2) * year,
-  ~ year * sex + length * life_stage + day * year + I(day^2) * year
+  ~ year * sex + length * life_stage + day * year + I(day^2) * year,
+  ~ year * sex + length * sex + length * life_stage + day * sex + I(day^2),
+  ~ year * sex + length * sex + length * life_stage + day * sex + day * year + I(day^2),
+  ~ year * sex + length * sex + length * life_stage + day * sex + I(day^2) * year,
+  ~ year * sex + length * sex + length * life_stage + day * sex + day * year + I(day^2) * year
 )
 
 # fit all these models

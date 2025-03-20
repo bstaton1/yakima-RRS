@@ -3,7 +3,7 @@
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("06-1gen-demo-boost/06-00-setup.R")
+source("07-2gen-percapita-prod/07-00-setup.R")
 
 # build the formulae for candidate models
 formulae = list(
@@ -15,17 +15,29 @@ formulae = list(
   ~ disposition * year * sex + life_stage,
   ~ disposition * year * sex + life_stage * disposition,
   ~ disposition * year * sex + length,
+  ~ disposition * year * sex + length * sex,
   ~ disposition * year * sex + length * disposition,
+  ~ disposition * year * sex + length * disposition * sex,
   ~ disposition * year * sex + length * life_stage,
+  ~ disposition * year * sex + length * sex + length * life_stage,
   ~ disposition * year * sex + length * life_stage + length * disposition,
+  ~ disposition * year * sex + length * sex + length * life_stage + length * disposition,
   ~ disposition * year * sex + day,
+  ~ disposition * year * sex + day * sex,
   ~ disposition * year * sex + day * disposition,
+  ~ disposition * year * sex + day * disposition * sex,
   ~ disposition * year * sex + day + I(day^2),
+  ~ disposition * year * sex + day * sex + I(day^2),
   ~ disposition * year * sex + day + I(day^2) * disposition,
+  ~ disposition * year * sex + day * sex + I(day^2) * disposition,
   ~ disposition * year * sex + length * life_stage + length * disposition + day + I(day^2),
   ~ disposition * year * sex + length * life_stage + length * disposition + day * disposition + I(day^2),
   ~ disposition * year * sex + length * life_stage + length * disposition + day + I(day^2) * disposition,
-  ~ disposition * year * sex + length * life_stage + length * disposition + day * disposition + I(day^2) * disposition
+  ~ disposition * year * sex + length * life_stage + length * disposition + day * disposition + I(day^2) * disposition,
+  ~ disposition * year * sex + length * life_stage + length * disposition * sex + day * sex + I(day^2),
+  ~ disposition * year * sex + length * life_stage + length * disposition * sex + day * disposition * sex + I(day^2),
+  ~ disposition * year * sex + length * life_stage + length * disposition * sex + day * sex + I(day^2) * disposition,
+  ~ disposition * year * sex + length * life_stage + length * disposition * sex + day * disposition * sex + I(day^2) * disposition
 )
 
 # fit all these models

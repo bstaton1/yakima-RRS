@@ -3,7 +3,7 @@
 # -> sets output directory           ##
 # -> loads data                      ##
 # -> loads any existing output files ##
-source("06-1gen-demo-boost/06-00-setup.R")
+source("07-2gen-percapita-prod/07-00-setup.R")
 
 # resolution
 ppi = 600
@@ -74,9 +74,9 @@ for (RS_type in RS_types) {
         cat("      ", file, "\n", sep = "")
         
         # open a graphics device
-        png(file.path(fig_dir, file), width = 7.2 * ppi, height = 5 * ppi, res = ppi)
-
-        my_par(mfrow = c(3,4))
+        png(file.path(fig_dir, file), width = 6 * ppi, height = 4 * ppi, res = ppi)
+        
+        my_par(mfrow = c(2,3))
 
         # set the counter: for iterating through the panel letter labels (a), (b), etc.
         counter <<- 0
