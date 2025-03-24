@@ -1,6 +1,6 @@
 
 # set the default data file to be used
-default_inFile = "YakimaParentageInputFile2024_V4.xlsx"
+default_inFile = "YakimaParentageInputFile2024.xlsx"
 
 #### DATA PREPARATION FUNCTIONS ####
 
@@ -79,7 +79,7 @@ format_dataset = function(rrs_type, inFile = default_inFile) {
   # warnings are about NA values in the Total_Adult_Grand_Offs;
   # these can be ignored because those rows will be filtered out later if column is used
   dat = suppressWarnings({
-    readxl::read_excel(inFile, sheet = ifelse(rrs_type == "cross_type", "Yakima Assign Per Cross", "YakimaAssignmentsCorrectedGrand"))
+    readxl::read_excel(inFile, sheet = ifelse(rrs_type == "cross_type", "Yakima Assign Per Cross", "YakimaAssignmentsGrand"))
   })
   
   # step 1: improve column names
@@ -288,7 +288,7 @@ build_dataset = function(rrs_type, use_F1 = FALSE, inFile = default_inFile) {
 
 merge_parent_info = function(dat, inFile = default_inFile, keep_unk_parent_id = FALSE, keep_unk_parent_origin = FALSE) {
   df = suppressWarnings({
-    readxl::read_excel(inFile, sheet = "YakimaAssignmentsCorrectedGrand")
+    readxl::read_excel(inFile, sheet = "YakimaAssignmentsGrand")
   })
   
   # step 1: improve column names
