@@ -51,9 +51,6 @@ rsconnect/
 # anything in the 99-scratch folder
 99-scratch/
 
-# the data file
-YakimaParentageInputFile2024*
-
 ### OUTPUT FILES
 ### DON'T TRACK, SINCE CAN BE REPRODUCED FROM SOURCE CODE
 
