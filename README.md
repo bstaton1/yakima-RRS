@@ -4,17 +4,12 @@
 > benefits and costs of supplementation in upper Yakima River Chinook
 > salmon* by I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P.
 > Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J.
-> Bosch.
+> Bosch; now accepted for publication in the *Canadian Journal of
+> Fisheries and Aquatic Sciences*.
 
-[![ArticleDOI](https://img.shields.io/badge/Article-PLACEHOLDER%20IF%20ACCEPTED-blue?logo=doi&logoColor=f5f5f5)]()  
+[![ArticleDOI](https://img.shields.io/badge/Article-10.1139/cjfas--2024--0289-blue?logo=doi&logoColor=f5f5f5)](https://doi.org/10.1139/cjfas-2024-0289)  
 [![GitHub Repo Archive
 DOI](https://img.shields.io/badge/GitHub%20Repo%20Archive-10.5281/zenodo.13738201-blue?logo=github)](https://doi.org/10.5281/zenodo.13738201)
-
-## Data Ownership
-
-*The data file needed to run these analyses has not yet been approved
-for public sharing. Please contact the manuscript authors to receive a
-copy of the data set.*
 
 ## Repo Organization
 
@@ -49,6 +44,65 @@ Additional scripts include:
 - `ms-content/supplement`: Contains multiple Rmarkdown source code files
   for building the manuscript supplemental material.
 
+## Data File
+
+The data file containing the records for all GLM analyses is
+`YakimaParentageInputFile2024.xlsx`. It has two tabs, which contain data
+for the different analyses, click below to view a description of each
+variable.
+
+<details>
+<summary>
+<b>Tab: Yakima Assign Per Cross</b>
+</summary>
+
+Each row is a detected spawning pair.
+
+| Column                    | Description                                                                                                                                     |
+|:--------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Pa_Ma`                   | Individual IDs of the male and female spawners involved in the pair (separated by a colon)                                                      |
+| `No.Offspring`            | Number of adult offspring that were assigned to the pair                                                                                        |
+| `Parental_CrossType`      | Origin of the male and female parent; expressed as `maleXfemale` (`WN` = naturally spawned, `SH` = hatchery spawned)                            |
+| `Parental_Spawn_Location` | Setting in which the spawning occurred for this pair, either natural or hatchery                                                                |
+| `Parental_SampleYear`     | Year in which spawning occurred                                                                                                                 |
+| `Pa_Ma_life_stage`        | Life stages (either jack or adult) of the male and female parent; expressed as `male_female`; *all female jacks recoded as adults for analysis* |
+| `Pa_Disposition`          | Spawning disposition of the male parent (natural or broodstock)                                                                                 |
+| `Pa_Origin`               | Origin of the male parent (`WN` = naturally spawned, `SH` = hatchery spawned)                                                                   |
+| `Pa_Date`                 | Return date of the male parent                                                                                                                  |
+| `Pa_Location`             | Spawning location of the male parent (natural or hatchery)                                                                                      |
+| `Pa_ForkLength`           | Fork length (mm) of the male parent                                                                                                             |
+| `Ma_Disposition`          | Spawning disposition of the female parent (natural or broodstock)                                                                               |
+| `Ma_Origin`               | Origin of the female parent (`WN` = naturally spawned, `SH` = hatchery spawned)                                                                 |
+| `Ma_Date`                 | Return date of the female parent                                                                                                                |
+| `Ma_Location`             | Spawning location of the female parent (natural or hatchery)                                                                                    |
+| `Ma_ForkLength`           | Fork length (mm) of the female parent                                                                                                           |
+
+</details>
+<details>
+<summary>
+<b>Tab: YakimaAssignmentsGrand</b>
+</summary>
+
+Each row is an individual spawner.
+
+| Column                   | Description                                                                                              |
+|:-------------------------|:---------------------------------------------------------------------------------------------------------|
+| `id`                     | Individual spawner ID                                                                                    |
+| `sex`                    | Sex of the spawner                                                                                       |
+| `origin`                 | Origin of the spawner (i.e., `WN` = naturally spawned, `SH` = hatchery spawned)                          |
+| `length`                 | Fork length of the spawner (mm)                                                                          |
+| `date`                   | Return date of the spawner                                                                               |
+| `day`                    | Return date, converted to day of the year                                                                |
+| `disposition`            | Spawning disposition (natural or broodstock)                                                             |
+| `life_stage`             | Life stage of the spawner (jack or adult; *all female jacks recoded as adult for analysis*)              |
+| `total_adult_offs`       | Number of adult offspring that were assigned to the spawner                                              |
+| `Total_Adult_Grand_Offs` | Number of adult grand-offspring (i.e., second generation, offspring’s offspring) assigned to the spawner |
+| `Parentage Broodyear`    | Year in which the spawner returned to spawn                                                              |
+| `Recoded Acc Site`       | For hatchery-origin fish, the acclimation site to which they were released                               |
+| `Pa_Ma`                  | Where available, the IDs of the parents of the spawner, expressed as `male:female`                       |
+
+</details>
+
 ## Reproducibility
 
 The output files are too large to track in a git repo, so this code will
@@ -59,8 +113,8 @@ All analyses that use random number generators (e.g., parametric
 bootstrapping) include a `set.seed()` statement, so our results should
 be exactly reproducible if all defaults are used.
 
-Clone the repository, acquire the data (see *Data Ownership* above), and
-navigate to the repository location on your computer.
+Clone the repository and navigate to the repository location on your
+computer.
 
 **All Analyses At Once**
 
@@ -167,7 +221,7 @@ pkgs[!pkgs %in% rownames(installed.packages())]
     ##  collate  English_United States.utf8
     ##  ctype    English_United States.utf8
     ##  tz       America/Los_Angeles
-    ##  date     2024-12-03
+    ##  date     2025-03-25
     ##  pandoc   3.1.11 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
     ## 
     ## ─ Packages ───────────────────────────────────────────────────────────────────

@@ -2,8 +2,8 @@
 title: '<span style="font-variant: small-caps;"><b><big>Supplemental Material</big></b></span>'
 subtitle: "<small>_Evaluating the long-term net reproductive benefits and costs of supplementation in Upper Yakima River Chinook salmon_</small>"
 author: |
-    | <small>**Authors**: Koch, Staton, Nuetzel et al.</small>
-    | <small>**Date Drafted**: 2025-01-08</small>
+    | <small>**Authors**: I.J. Koch, B.A. Staton, H.M. Nuetzel, T.R. Seamons, A.P. Matala, K.I. Warheit, M.V. Johnston, C.R. Strom, S.R. Narum, and W.J. Bosch</small>
+    | <small>**Article DOI**: [10.1139/cjfas-2024-0289](https://doi.org/10.1139/cjfas-2024-0289)</small>
 output:
   html_document
 params:
